@@ -10,7 +10,7 @@ public class Menu {
 			switch(choice) {
 			case 1:
 				Operator o = new Operator();
-				o.displayOperatorOptions();
+				o.displayOperatorOptions(conn);
 				break;
 			case 2:
 				Nurse n = new Nurse();
@@ -22,7 +22,7 @@ public class Menu {
 				break;
 			case 4:
 				Admin ad = new Admin();
-				ad.displayAdminOptions();
+				ad.displayAdminOptions(conn);
 				break;
 			default:
 				System.out.println("Invalid Input. Bye Bye");

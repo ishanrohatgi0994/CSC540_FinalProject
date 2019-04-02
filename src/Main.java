@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class Main {
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws SQLException{
 
         //System.out.println("Establish DB connection here");
         establishConnection ec = new establishConnection(); 
@@ -12,6 +12,7 @@ public class Main {
         	//System.out.println("Write switch case here");
         	Menu menu = new Menu();
         	menu.displayOptions(conn);
+        	conn.close();
         }
 
     }
