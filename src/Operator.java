@@ -1,4 +1,10 @@
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Operator {
@@ -31,6 +37,34 @@ public class Operator {
 	// Harsh Implement
 	// Add Operator, UPDATE Operator, Delete Operator 
 	public void addOperator(Connection conn) {
+		// Fetching Details to create new Operator
+		
+		System.out.println("Enter Operator name");
+		String name = sc.next();
+		System.out.println("Enter Operator Age");
+		int age = sc.nextInt();
+		System.out.println("Enter Operator Gender : M/F");
+		String gender = sc.next();
+		System.out.println("Enter Operator Phone");
+		BigInteger phone = sc.nextBigInteger();
+		System.out.println("Enter Operator Department");
+		String dept = sc.next();
+		System.out.println("Enter Operator job_title");
+		String title = sc.next();
+		System.out.println("Enter Operator Address");
+		String address = sc.next();
+		try {
+			PreparedStatement stmt=conn.prepareStatement("INSERT INTO operator (name,age,gender,phone,department,job_title,address)"+
+														"VALUES (?,?,?,?,?,?,?)");
+			stmt.setString(1, name);
+			stmt.setInt(2, age);
+			stmt.setString(3, gender);
+			stmt.setBigDecimal(4, new BigDecimal(phone));
+			ResultSet rs = stmt.executeQuery(query);
+		}
+		catch(Exception e) {
+			System.out.println("Operator Creation Failed");
+		}
 		
 	}
 	public void updateOperator(Connection conn) {
