@@ -1,26 +1,20 @@
-import java.net.ConnectException;
-import java.sql.*;
-
-public abstract class establishConnection implements Connection {
-
-    public Connection establishConnection(){
-
-        final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/$USER$";
-        Connection conn = null;
-
-        try {
-            Class.forName("org.mariadb.jdbc.Driver");
-
-            String user = "$USER$";
-            String passwd = "$PASSWORD$";
-
-            conn = DriverManager.getConnection(jdbcURL, user, passwd);
-
-            return conn;
-        }
-        catch (Exception e){
-            System.out.println("Connection not established");
-            return conn;
-        }
-    }
-}
+import java.sql.*;  
+    
+class establishConnection{  
+    public Connection getConnection(){  
+    	try{  
+	    	Class.forName("com.mysql.cj.jdbc.Driver");  
+	    	Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital","root","admin");  
+	    	Statement stmt=con.createStatement();  
+	    	ResultSet rs=stmt.executeQuery("select * from doctor");  
+	    	//while(rs.next())  
+	    		//System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
+	    	return con;  
+    	}
+    	catch(Exception e)
+    	{ 
+    		System.out.println(e);
+    	}
+		return null;  
+    }  
+}  

@@ -1,8 +1,9 @@
+import java.sql.Connection;
 import java.util.Scanner;
 
 public class Menu {
 	Scanner sc = new Scanner(System.in);
-	public void displayOptions() {
+	public void displayOptions(Connection conn) {
 		System.out.println("1) Operator \n 2) Nurse \n 3) Doctor \n 4) Admin \n Enter your choice : (1/2/3/4)");
 		try {
 			int choice  = sc.nextInt();
