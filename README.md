@@ -46,6 +46,8 @@ Admin
 3) Add Operator (Harsh)
 4) Add Ward" (Ishan)
 5) Assign Nurse to ward \n\ (Chinmai)
-6) View Reports" (NOT ASSIGNED)
+6) Update Operator (Harsh)
+7) Delete Operator (Harsh)
+8) View Reports" (NOT ASSIGNED)
 
-30 operations excluding view reports
+32 operations excluding view reports
