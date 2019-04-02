@@ -2,9 +2,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class Operator {
@@ -60,7 +57,10 @@ public class Operator {
 			stmt.setInt(2, age);
 			stmt.setString(3, gender);
 			stmt.setBigDecimal(4, new BigDecimal(phone));
-			ResultSet rs = stmt.executeQuery(query);
+			stmt.setString(5, dept);
+			stmt.setString(6, title);
+			stmt.setString(7, address);
+			stmt.executeUpdate();
 		}
 		catch(Exception e) {
 			System.out.println("Operator Creation Failed");
