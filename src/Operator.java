@@ -1,3 +1,5 @@
+import com.mysql.cj.jdbc.exceptions.PacketTooBigException;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -18,12 +20,46 @@ public class Operator {
 			// Check out patient involves generating Billing too
 		int choice = sc.nextInt();
 		switch (choice){
+			case 1:
+				try{
+					Patient.addPatient(conn);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case 2:
 				mr.checkInPatient(conn);
+				break;
+			case 5:
+				try {
+					Patient.updatePatient(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			case 7:
 				mr.updateMedicalRecord(conn);
 				break;
+			case 10:
+				try {
+					Patient.deletePatient(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case 12:
+				try {
+					Patient.assignWardToPatient(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case 13:
+				try {
+					Patient.checkoutPatient(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			default:
 				System.out.println("Invalid Input");
 		}
