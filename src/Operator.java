@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Scanner;
 
 public class Operator {
@@ -60,6 +61,7 @@ public class Operator {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				break;
 			default:
 				System.out.println("Invalid Input");
 		}
@@ -97,7 +99,7 @@ public class Operator {
 			stmt.setString(5, dept);
 			stmt.setString(6, title);
 			stmt.setString(7, address);
-			stmt.executeUpdate();
+			stmt.executeUpdate(); // Insertion done
 			System.out.println();
 			System.out.println("Operator Insertion Successful");
 		}
@@ -107,10 +109,119 @@ public class Operator {
 		
 	}
 	public void updateOperator(Connection conn) {
+		System.out.println("Enter Operator name whose details needs to be updated");
+		String name = sc.nextLine();
+		System.out.println("Enter the phone number");
+		BigInteger phone = sc.nextBigInteger();
 		
-		
+		try {
+			PreparedStatement stmt=conn.prepareStatement("Select * from operator where name =? and phone =?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			stmt.setString(1, name);
+			stmt.setBigDecimal(2, new BigDecimal(phone));
+			ResultSet rs = stmt.executeQuery(); 
+			String ch;
+			while(rs.next()) {
+				//System.out.println(rs.getString("name"));
+				System.out.println("Do you want to update name (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter new name");
+					sc.nextLine();
+					String new_name = sc.nextLine();
+					rs.updateString("name", new_name);
+					System.out.println("Update Operator name successful");
+				}
+				System.out.println("Do you want to update age (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter new age");
+					int new_age = sc.nextInt();
+					rs.updateInt("age", new_age);
+					System.out.println("Update Operator age successful");
+				}
+				System.out.println("Do you want to update gender (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter Gender");
+					String new_gender = sc.next();
+					rs.updateString("gender", new_gender);
+					System.out.println("Update Operator gender successful");
+				}
+				System.out.println("Do you want to update phone (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter new phone number");
+					BigInteger new_phone = sc.nextBigInteger();
+					rs.updateBigDecimal("phone", new BigDecimal(new_phone));
+					System.out.println("Update Operator phone successful");
+				}
+				System.out.println("Do you want to department name (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter new department");
+					sc.nextLine();
+					String new_department = sc.nextLine();
+					rs.updateString("department", new_department);
+					System.out.println("Update Operator department successful");
+				}
+				System.out.println("Do you want to update job_title (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter new job title");
+					sc.nextLine();
+					String new_job_title = sc.nextLine();
+					rs.updateString("job_title", new_job_title);
+					System.out.println("Update Operator Job Title successful");
+				}
+				System.out.println("Do you want to update address (Y/N) ?");
+				ch = sc.next();
+				if(ch.equals("Y") || ch.equals("y")) {
+					System.out.println("Enter new address");
+					sc.nextLine();
+					String new_address = sc.nextLine();
+					rs.updateString("address", new_address);
+					System.out.println("Update Operator address successful");
+				}
+				rs.updateRow();	
+			}
+			System.out.println ("Thankyou!!");
+		}catch (Exception e) {
+			//System.out.println(e.getMessage());
+			System.out.println("Update Operator Record unsuccessful");
+		}
 	}
 	public void deleteOperator(Connection conn) {
+		System.out.println("Enter Operator name who needs to be deleted");
+		String name = sc.nextLine();
+		System.out.println("Enter the phone number");
+		BigInteger phone = sc.nextBigInteger();
+		
+		try {
+			PreparedStatement stmt=conn.prepareStatement("Delete from operator where name =? and phone =?");
+			stmt.setString(1, name);
+			stmt.setBigDecimal(2, new BigDecimal(phone));
+			stmt.executeUpdate(); // Will delete if operator exists else no side effects
+			System.out.println("Delete Operator successful");
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Delete Operator unsuccessful");
+		}
+	}
+
+	public void viewAllOperators(Connection conn) {
+		try {
+			PreparedStatement stmt=conn.prepareStatement("Select * from operator");
+			ResultSet rs = stmt.executeQuery();
+			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \n");
+			while(rs.next()) {
+				System.out.println(rs.getString(2) + "\t\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) + 
+								"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8));
+			}
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error in viewing operators");
+		}
 		
 	}
 }
