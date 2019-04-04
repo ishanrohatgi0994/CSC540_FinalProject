@@ -25,6 +25,10 @@ public class Operator {
 			case 7:
 				mr.updateMedicalRecord(conn);
 				break;
+			case 12:
+				mr.assignWardToPatient(conn);
+			case 13:
+				mr.checkOutPatient(conn);
 			default:
 				System.out.println("Invalid Input");
 		}
