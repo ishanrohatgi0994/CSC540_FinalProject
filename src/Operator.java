@@ -27,8 +27,10 @@ public class Operator {
 				break;
 			case 12:
 				mr.assignWardToPatient(conn);
+				break;
 			case 13:
 				mr.checkOutPatient(conn);
+				break;
 			default:
 				System.out.println("Invalid Input");
 		}

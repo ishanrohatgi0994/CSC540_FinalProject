@@ -14,11 +14,11 @@ public class Menu {
 				break;
 			case 2:
 				Nurse n = new Nurse();
-				n.displayNurseOptions();
+				n.displayNurseOptions(conn);
 				break;
 			case 3:
 				Doctor d = new Doctor();
-				d.displayDoctorOptions();
+				d.displayDoctorOptions(conn);
 				break;
 			case 4:
 				Admin ad = new Admin();

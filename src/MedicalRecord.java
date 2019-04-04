@@ -117,4 +117,14 @@ public class MedicalRecord {
 		// Aniruddha - Billing flow
 		
 	}
+	public void viewMedicalRecordForPatient(Connection conn) {
+		System.out.println("Enter Patient Id whose current medical record you want to see");
+		int p_id = sc.nextInt();
+		int mr_id = getLatestMedicalRecordFromPatientId(p_id, conn);
+		if(mr_id == -1)
+			System.out.println("Patient Record Not found");
+		else {
+			// Fetch details for this mr_id and print - Aniruddha
+		}
+	}
 }

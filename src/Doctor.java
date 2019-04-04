@@ -1,7 +1,8 @@
+import java.sql.Connection;
 
 public class Doctor {
 
-	public void displayDoctorOptions() {
+	public void displayDoctorOptions(Connection conn) {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
 				+ "\n 3) View Current Treatment Details \n 4) Add Treatment"
 				+ "\n 5) Update Treatment"
