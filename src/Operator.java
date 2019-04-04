@@ -37,19 +37,20 @@ public class Operator {
 		// Fetching Details to create new Operator
 		
 		System.out.println("Enter Operator name");
-		String name = sc.next();
+		String name = sc.nextLine();
 		System.out.println("Enter Operator Age");
 		int age = sc.nextInt();
 		System.out.println("Enter Operator Gender : M/F");
 		String gender = sc.next();
 		System.out.println("Enter Operator Phone");
 		BigInteger phone = sc.nextBigInteger();
-		System.out.println("Enter Operator Department");
-		String dept = sc.next();
+		System.out.println("Enter Operator's Department");
+		sc.nextLine();
+		String dept = sc.nextLine();
 		System.out.println("Enter Operator job_title");
-		String title = sc.next();
+		String title = sc.nextLine();
 		System.out.println("Enter Operator Address");
-		String address = sc.next();
+		String address = sc.nextLine();
 		try {
 			PreparedStatement stmt=conn.prepareStatement("INSERT INTO operator (name,age,gender,phone,department,job_title,address)"+
 														"VALUES (?,?,?,?,?,?,?)");
@@ -61,6 +62,8 @@ public class Operator {
 			stmt.setString(6, title);
 			stmt.setString(7, address);
 			stmt.executeUpdate();
+			System.out.println();
+			System.out.println("Operator Insertion Successful");
 		}
 		catch(Exception e) {
 			System.out.println("Operator Creation Failed");
@@ -68,6 +71,7 @@ public class Operator {
 		
 	}
 	public void updateOperator(Connection conn) {
+		
 		
 	}
 	public void deleteOperator(Connection conn) {
