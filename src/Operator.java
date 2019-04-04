@@ -149,11 +149,26 @@ public class Operator {
 			}
 			System.out.println ("Thankyou!!");
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Update Operator Record unsuccessful");
 		}
 	}
 	public void deleteOperator(Connection conn) {
+		System.out.println("Enter Operator name who needs to be deleted");
+		String name = sc.nextLine();
+		System.out.println("Enter the phone number");
+		BigInteger phone = sc.nextBigInteger();
 		
+		try {
+			PreparedStatement stmt=conn.prepareStatement("Delete from operator where name =? and phone =?");
+			stmt.setString(1, name);
+			stmt.setBigDecimal(2, new BigDecimal(phone));
+			stmt.executeUpdate(); // Will delete if operator exists else no side effects
+			System.out.println("Delete Operator successful");
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Delete Operator unsuccessful");
+		}
 	}
 }
