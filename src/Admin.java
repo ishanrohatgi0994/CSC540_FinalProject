@@ -18,6 +18,8 @@ public class Admin {
 				break;
 			case 7:
 				op.deleteOperator(conn);
+			case 8:
+				op.viewAllOperators(conn);
 			
 		}
 	}
