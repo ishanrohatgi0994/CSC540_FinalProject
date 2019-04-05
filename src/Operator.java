@@ -1,5 +1,3 @@
-import com.mysql.cj.jdbc.exceptions.PacketTooBigException;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -120,6 +118,9 @@ public class Operator {
 			stmt.setBigDecimal(2, new BigDecimal(phone));
 			ResultSet rs = stmt.executeQuery(); 
 			String ch;
+			if(rs.getFetchSize() == 0){
+				System.out.println("Operator not found");
+			}
 			while(rs.next()) {
 				//System.out.println(rs.getString("name"));
 				System.out.println("Do you want to update name (Y/N) ?");
@@ -184,7 +185,7 @@ public class Operator {
 				}
 				rs.updateRow();	
 			}
-			System.out.println ("Thankyou!!");
+			System.out.println ("Updated, Thankyou!!");
 		}catch (Exception e) {
 			//System.out.println(e.getMessage());
 			System.out.println("Update Operator Record unsuccessful");
