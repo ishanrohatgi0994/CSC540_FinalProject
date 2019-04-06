@@ -51,3 +51,20 @@ Admin
 8) View Reports" (NOT ASSIGNED)
 
 32 operations excluding view reports
+
+Reporting tasks
+---
+1. Generate Patient Medical History Report (Aniruddha)
+2. Generate Ward usage History (Harsh)
+3. Generate current ward usage percentage (Chinmai)
+4. All information of patients currently being treated by a given doctor (Ishan)
+5. Get all staff by role (Aniruddha)
+
+Additional APIs
+---
+1. Get doctor information by IDs (LIST OF IDS) (Ishan)
+2. Get nurse by IDs (Chinmai)
+3. Get patient by IDs (Aniruddha)
+4. Get operator by IDs (Harsh)
+5. Get ward by IDs (Chinmai)
+6. Pay bill API (just add valid credit card number information to the billing record, set payment status to paid and rollback if any error. (NOT ASSIGNED)
