@@ -5,6 +5,7 @@ public class Admin {
 	Scanner sc = new Scanner(System.in);
 	Operator op = new Operator();
 	Nurse nurse = new Nurse();
+	Doctor doctor = new Doctor();
 
 	public void displayAdminOptions(Connection conn) {
 		System.out.println(" \n 1) Add Doctor \n 2) Add Nurse \n 3) Add Operator \n 4) Add Ward"
@@ -14,6 +15,13 @@ public class Admin {
 				" 13) View All Nurses \n" + " 14) View All Doctors \n");
 		int choice = sc.nextInt();
 		switch (choice) {
+			case 1:
+				try{
+					doctor.addDoctor(conn);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case 2: 
 				nurse.addNurse(conn);
 				break;
@@ -26,17 +34,33 @@ public class Admin {
 			case 7:
 				nurse.updateNurse(conn);
 				break;
+			case 8:
+				try {
+					Doctor.updateDoctor(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case 9:
 				op.deleteOperator(conn);
 				break;
 			case 10:
 				nurse.deleteNurse(conn);
 				break;
+			case 11:
+				try {
+					Doctor.deleteDoctor(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case 12:
 				op.viewAllOperators(conn);
 				break;
 			case 13:
 				nurse.viewAllNurses(conn);
+			case 14:
+				doctor.viewAllDoctors(conn);
 			
 		}
 	}
