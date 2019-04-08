@@ -24,8 +24,12 @@ public class Nurse {
 				break;
 		case 2: treatment.addTreatment(conn);
 				break;
-		case 3: ward.viewWardInformation(conn);
-				break;
+		case 3: try {
+			Ward.viewWardInformationForNurse(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		break;
 		case 4: treatment.viewCurrentTreatmentDetails(conn);
 				break;
 		case 5: mr.viewMedicalRecordForPatient(conn);

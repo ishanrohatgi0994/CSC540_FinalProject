@@ -45,6 +45,13 @@ public class Operator {
 					e.printStackTrace();
 				}
 				break;
+			case 6:
+				try {
+					Ward.updateWard(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case 7:
 				mr.updateMedicalRecord(conn);
 				break;
@@ -58,6 +65,13 @@ public class Operator {
 			case 10:
 				try {
 					Patient.deletePatient(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case 11:
+				try {
+					Ward.deleteWard(conn);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

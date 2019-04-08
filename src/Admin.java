@@ -28,6 +28,13 @@ public class Admin {
 			case 3:
 				op.addOperator(conn);
 				break;
+			case 4:
+				try{
+					Ward.addWard(conn);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case 6:
 				op.updateOperator(conn);
 				break;
