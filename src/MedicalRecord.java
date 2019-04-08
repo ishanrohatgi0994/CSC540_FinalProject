@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -108,15 +109,6 @@ public class MedicalRecord {
 		}		
 	}
 
-	public void assignWardToPatient(Connection conn) {
-		// Aniruddha
-		
-	}
-
-	public void checkOutPatient(Connection conn) {
-		// Aniruddha - Billing flow
-		
-	}
 	public void viewMedicalRecordForPatient(Connection conn) {
 		System.out.println("Enter Patient Id whose current medical record you want to see");
 		int p_id = sc.nextInt();
@@ -125,6 +117,22 @@ public class MedicalRecord {
 			System.out.println("Patient Record Not found");
 		else {
 			// Fetch details for this mr_id and print - Aniruddha
+			String query = "SELECT mr_id, doc_id, prescription, diagnosis, ward_id, checkin_date FROM medical_records WHERE "+
+					"mr_id="+mr_id;
+			try {
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(query);
+
+				System.out.println("MEDICAL RECORD ID: " + rs.getInt(1));
+				System.out.println("RESPONSIBLE DOCTOR: " + rs.getInt(2));
+				System.out.println("PRESCRIPTION GIVEN: "+rs.getString(3));
+				System.out.println("DIAGNOSIS: "+rs.getString(4));
+				System.out.println("WARD: "+rs.getInt(5));
+				System.out.println("CHECK IN DATE: "+rs.getDate(6));
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println("Failed to get latest medical record");
+			}
 		}
 	}
 }
