@@ -15,7 +15,8 @@ public class Doctor {
 	public static int STATUS_NOT_WORKING = 0;
 	public static int STATUS_WORKING = 1;
 
-
+	Treatment treatment = new Treatment();
+	
 	public void displayDoctorOptions(Connection conn) {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
 				+ "\n 3) View Current Treatment Details \n 4) Add Treatment"
@@ -31,6 +32,9 @@ public class Doctor {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				break;
+			case 5: 
+				treatment.updateTreatment(conn);
 				break;
 			default:
 				System.out.println("Invalid choice");

@@ -1,65 +1,201 @@
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Patient {
     /*
+    Patient attributes
     Required attributes:
     name, phone, current_status
+     */
+    int patientID, current_status;
+    String name, address, gender;
+    BigDecimal ssn, phone;
+    Integer age;
+
+    /*
+    current_status values:
+    STATUS_NOT_IN_HOSPITAL if patient registered for some treatment and was also released.
+    STATUS_OUTPATIENT: If patient is in the hospital for normal check up.
+    STATUS_ADMITTED: If patient is admitted to a ward in the hospital
+    STATUS_SOFT_DELETED: If the patient is deleted. view medical records for this will not work.
+        The soft deleted patients are only used for generating reports.
      */
     public static int STATUS_NOT_IN_HOSPITAL = 0;
     public static int STATUS_OUTPATIENT = 1;
     public static int STATUS_ADMITTED = 2;
+    public static int STATUS_SOFT_DELETED = 3;
 
 
+    /*
+    DEFAULT_REGISTRATION_CHARGES is 100 dollars
+     */
+    public static float DEFAULT_REGISTRATION_CHARGES = 100;
+
+    // get Patient objects through a list of IDs this excludes all the patients which are deleted
+    public static ArrayList<Patient> getPatientByIDs(Connection conn, int[] ids) throws Exception {
+        /*
+        Input:
+            connection to a database (conn)
+            list of ids to be queried (ids)
+        Output:
+            ArrayList of patients
+         */
+        ArrayList<Patient> pl = new ArrayList<>();
+        if(ids == null || ids.length == 0) {
+            return pl;
+        }
+        String result = Arrays.stream(ids)
+                .mapToObj(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        // Query used for getting all the list of all patients
+        String query = "SELECT patient_id,ssn, name, phone, age, gender, address, current_status "+
+                "FROM patient WHERE patient_id IN  ("+result+") AND current_status != "+Patient.STATUS_SOFT_DELETED;
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        // Create patient objects for each patient and append to the returned array list.
+        while(rs.next()){
+            Patient p = new Patient();
+            p.patientID = rs.getInt("patient_id");
+            p.name = rs.getString("name");
+            p.address = rs.getString("address");
+            p.age = rs.getInt("age");
+            if(rs.wasNull()){
+                p.age = null;
+            }
+            // p.phone = new BigInteger(String.valueOf(rs.getLong("phone")));
+            p.phone = rs.getBigDecimal("phone");
+            p.ssn = rs.getBigDecimal("ssn");
+            if(rs.wasNull()){
+                p.ssn = null;
+            }
+            p.gender = rs.getString("gender");
+            pl.add(p);
+        }
+        return pl;
+    }
+
+    // TODO include in list menu options to include <admin, doctor, nurse>
+    // view patients by ids
+    public static void viewPatientsByIDs(Connection conn) {
+        /*
+        Input:
+            Connection to the database.
+        Asks the user first for the number of patients being queried.
+        Interactively asks for the IDs of each patient.
+        Displays the information of all the patients.
+         */
+        System.out.println("Enter the number of patients you want to get details of ");
+        Scanner sc = new Scanner(System.in);
+        int numPatients = sc.nextInt();
+        int[] ids = new int[numPatients];
+        System.out.println("Enter the ids of the patients");
+        for(int i = 0; i<numPatients ; i++){
+            ids[i] = sc.nextInt();
+        }
+        try {
+            ArrayList<Patient> plist = Patient.getPatientByIDs(conn, ids);
+            if(plist.size() == 0) {
+                System.out.println("Patients doesn't exist or deleted");
+            }
+            for(Patient p: plist) {
+                System.out.println("DETAILS OF PATIENT WITH ID "+p.patientID);
+                System.out.println("\tName: "+p.name);
+                System.out.println("\tGender: "+p.gender);
+                System.out.println("\tAge: "+p.age);
+                System.out.println("\tPhone: "+p.phone);
+                System.out.println("\tAddress: "+p.address);
+                switch(p.current_status) {
+                    case 0:
+                        System.out.println("Current Status: OUT OF HOSPITAL");
+                        break;
+                    case 1:
+                        System.out.println("Current Status: ADMITTED");
+                        break;
+                    case 2:
+                        System.out.println("Current Status: OUTPATIENT");
+                    case 3:
+                        //do nothing
+                        break;
+                    default:
+                        System.out.println("Current Status: INVALID");
+                }
+                System.out.println("SSN: "+p.ssn);
+                System.out.println();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Error fetching details of patients "+ids);
+        }
+    }
     //TODO Check error condition:
     // if phone is entered with special characters
     // if ssn is entered with special characters
 
     //TODO indicate what 0, 1 and 2 means when asking for the current status.
 
-    //TODO viewPatients to get the id of the patient?
-
     // Read details of a patient interactively and insert to the database.
-    public static void addPatient(Connection conn) throws IOException    {
+    public static void addPatient(Connection conn) throws Exception    {
+        /*
+        Input:
+            Connection to the database.
+        Interactively asks for the details of the patient and creates a patient record.
+         */
+
         // initialize required attributes
         String name, address;
         BigInteger ssn, phone;
         Integer current_status, age;
 
         // Interactively read each attributes
+        // read name of the patient
         name = Utils.readAttribute("name", "Patient", false);
         address = Utils.readAttribute("address", "Patient", true);
         if(address.equals("")) {
             address = null;
         }
+        // read ssn of the patient
         String ssnString = Utils.readAttribute("ssn", "Patient", true);
         if(ssnString.equals("")){
             ssn = null;
         }else {
             ssn = new BigInteger(ssnString);
         }
+        // read phone number of the patient
         phone = new BigInteger(Utils.readAttribute("phone number", "Patient", false));
+        // read age of the patient
         String ageString = Utils.readAttribute("age", "Patient", true);
         if(ageString.equals("")){
             age = null;
         }else {
             age = Integer.parseInt(ageString);
         }
+        // current status of the patient
         current_status = Integer.parseInt(Utils.readAttribute("current status ", "Patient", false));
         while(current_status != STATUS_ADMITTED && current_status != STATUS_NOT_IN_HOSPITAL && current_status != STATUS_OUTPATIENT) {
             System.out.println("Invalid status "+current_status+" entered. Try again.");
             current_status = Integer.parseInt(Utils.readAttribute("current status ", "Patient", false));
         }
+        // gender of the patient
+        String gender = Utils.readAttribute("Gender", "Patient", true);
+        if(gender.equals("")){
+            gender = null;
+        }
 
         // execute the statement
         try {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO patient (name, address, ssn, phone, current_status, age)"+
-                    " VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO patient (name, address, ssn, phone, current_status, age, gender)"+
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, name);
             ps.setString(2, address);
             if(ssn != null) {
@@ -74,6 +210,7 @@ public class Patient {
             } else {
                 ps.setNull(6, Types.INTEGER);
             }
+            ps.setString(7, gender);
             ps.executeUpdate();
 
             // Get the inserted id
@@ -91,6 +228,11 @@ public class Patient {
 
     // update a patient by interactively getting the ID of the patient.
     public static void updatePatient(Connection conn) throws Exception{
+        /*
+        Input:
+            Connection to the database
+        Interactively asks the user if a particular record needs to be updated, prepares an update query and executes it.
+         */
         int ID;
         ID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
         String UpdateQuery = "UPDATE patient SET ";
@@ -114,7 +256,7 @@ public class Patient {
             }
         }
         UpdateQuery = UpdateQuery + "WHERE patient_id="+ID;
-        System.out.println(UpdateQuery);
+        //System.out.println(UpdateQuery);
         //Execute the query
         try {
             Statement stmt = conn.createStatement();
@@ -126,17 +268,21 @@ public class Patient {
     }
 
 
-    //TODO  "Successfully deleted the patient" message appropriate?
 
-    // soft delete of the patient
+    // soft delete of the patient. Upate the current status field of the patient to SOFT_DELETED
     public static void deletePatient(Connection conn) throws Exception {
+        /*
+        Input:
+            Connection to the database
+        Soft deletes the patient only by updating the patient record to have the status; 3 i.e SOFT_DELETED.
+         */
         int ID;
         ID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
         System.out.println("Are you sure you want to delete the patient with id "+ ID+"? (y/n)");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         if(br.readLine().equals("y")) {
             Statement stmt = conn.createStatement();
-            String UpdateQuery = "UPDATE patient SET current_status = "+STATUS_NOT_IN_HOSPITAL+" where patient_id = "+ID;
+            String UpdateQuery = "UPDATE patient SET current_status = "+Patient.STATUS_SOFT_DELETED+" where patient_id = "+ID;
             try {
                 stmt.executeUpdate(UpdateQuery);
                 System.out.println("Successfully deleted the patient");
@@ -146,10 +292,25 @@ public class Patient {
         }
     }
 
-    //TODO make the function a transaction
-
+    // TODO if ran twice on the same medical record, error out.
     // assign ward to a patient interactively
     public static void assignWardToPatient(Connection conn) throws Exception {
+        /*
+        Input:
+            Connection to the database.
+
+        Assigns ward to a patient if
+        1. if patient record exists
+        2. if patient has not been deleted
+        3. Patient is currently not checked out.
+        4. There are beds available in the ward.
+
+        Prompts the user if a ward has already been assigned to the patient.
+
+        Transaction part:
+        1. Update medical record of the patient
+        2. Update the patient status and set it to be currently Admitted.
+         */
         int wardID, patientID;
         wardID = Integer.parseInt(Utils.readAttribute("ID", "Ward", false));
         patientID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
@@ -160,6 +321,16 @@ public class Patient {
             System.out.println("Error fetching medical record for the patient");
             return;
         }
+
+        // check if the patient is not deleted.
+        int[] ids = {patientID};
+        ArrayList<Patient> patientList = Patient.getPatientByIDs(conn, ids);
+        if(patientList.size() <= 0) {
+            System.out.println("Patient not found. Hence ward cannot be assigned.");
+            return;
+        }
+
+        conn.setAutoCommit(false);
         try {
             // check if the patient is already assigned a ward
             String getWardFromMedicalRecord = "SELECT ward_id FROM medical_records WHERE mr_id="+medicalRecordID;
@@ -169,10 +340,19 @@ public class Patient {
                 rs.getInt(1);
                 if(!rs.wasNull()) {
                     System.out.println("Patient already assigned a ward "+rs.getInt(1));
-                    return;
+                    System.out.println("Do you want to update the ward? Cost still will be taken from the date of check in (y/n)");
+                    Scanner sc = new Scanner(System.in);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                    String ip = br.readLine();
+                    if(!ip.equals("y")){
+
+                        System.out.println("Did not update ward info for the patient"+ ip);
+                        return;
+                    }
+                    Patient.releaseBed(conn, medicalRecordID);
                 }
             } else {
-                System.out.println("Medical record not found!");
+                System.out.println("Medical record not found or patient deleted!");
                 return;
             }
 
@@ -199,17 +379,32 @@ public class Patient {
             String updateWard = "UPDATE ward SET current_availability = "+(currentAvailability-1)+" WHERE ward_id="+wardID;
             stmt = conn.createStatement();
             stmt.executeUpdate(updateWard);
+
+            //Commit the transaction
+            conn.commit();
             System.out.println("Successfully updated ward id to "+wardID+" for patient "+patientID);
         } catch (SQLException e) {
+            conn.rollback();
             System.out.println("Error assigning ward to the patient "+patientID);
             e.printStackTrace();
         }
+        conn.setAutoCommit(true);
     }
 
     // get current medical record ID for the patient who is currently enrolled
     public static int getCurrentMedicalRecordID(Connection conn, int patientID) throws Exception {
+        /*
+        Input:
+            Connection to the database
+            PatientID to get the medical record details from
+        Output:
+            Medical record ID if a medical record exists with no checkout date (Which means the patient is still in the
+            hospital)
+
+         */
         Statement stmt = conn.createStatement();
-        String query = "SELECT mr_id FROM medical_records WHERE patient_id = " + patientID + " AND checkout_date IS NULL";
+        String query = "SELECT mr_id FROM medical_records WHERE patient_id = " + patientID +
+                " AND checkout_date IS NULL";
         try {
             ResultSet rs = stmt.executeQuery(query);
             if(rs.next()) {
@@ -217,12 +412,21 @@ public class Patient {
             }
         } catch (SQLException e) {
             System.out.println("Error while getting recent medical record for the patient "+ patientID);
+            System.out.println(e.getMessage());
         }
         return -1;
     }
 
+    // TODO what about the current list of medical records.
     // view medical history for a patient
     public static void viewMedicalHistory(Connection conn) throws Exception {
+        /*
+        Input: Connection to the database.
+
+        View Medical history of a patient by getting the patient id.
+        Medical history refers to the medical record details which starts after the start-date entered and ends before
+        the end-date entered by the user.
+         */
         int patientID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
         String startDate = Utils.readAttribute("Begin Date", "Medical History (yyyy-mm-dd)", false);
         String endDate = Utils.readAttribute("End Date", "Medical History (yyyy-mm-dd)", false);
@@ -237,18 +441,31 @@ public class Patient {
             System.out.println("-----");
             int mrCount = 0;
             while(rs.next()) {
-                System.out.println("MEDICAL RECORD ID: "+rs.getInt(1));
-                System.out.println("TREATED DOCTOR ID: "+rs.getInt(2));
-                System.out.println("PRESCRIPTION GIVEN: "+rs.getString(3));
-                System.out.println("DIAGNOSIS: "+rs.getString(4));
-                System.out.println("CHECKIN DATE: "+rs.getDate(5));
-                System.out.println("CHECKOUT DATE: "+rs.getDate(6));
-                String getTreatments = "SELECT treatment_type, doc_id FROM treatment WHERE mr_id="+rs.getInt(1);
+                System.out.println("MEDICAL RECORD ID: "+rs.getInt("mr_id"));
+                System.out.println("TREATED DOCTOR ID: "+rs.getInt("doc_id"));
+                System.out.println("TREATMENT DOCTOR DETAILS: ");
+
+                // TODO uncomment when Doctor APIs are implemented
+                // int[] docIDs = {rs.getInt(2)};
+                // Doctor.getDoctorByIDs(conn, docIDs);
+                // PrintDoctor()
+
+                System.out.println("PRESCRIPTION GIVEN: "+rs.getString("prescription"));
+                System.out.println("DIAGNOSIS: "+rs.getString("diagnosis"));
+                System.out.println("CHECKIN DATE: "+rs.getDate("checkin_date"));
+                System.out.println("CHECKOUT DATE: "+rs.getDate("checkout_date"));
+                String getTreatments = "SELECT treatment_type, doc_id FROM treatment WHERE mr_id="+rs.getInt("mr_id");
                 Statement treatmentStatement = conn.createStatement();
                 ResultSet treatments = treatmentStatement.executeQuery(getTreatments);
                 while(treatments.next()){
                     System.out.println("\tTREATMENT: "+treatments.getString(1));
                     System.out.println("\tSPECIALITY DOCTOR: "+treatments.getInt(2));
+
+                    // TODO uncomment when Doctor APIs are implemented
+                    // int[] specialityDoctor = {treatments.getInt(2)};
+                    // Doctor.getDoctorByIDs(conn, specialityDoctor);
+                    // PrintDoctor();
+
                     System.out.println();
                 }
                 mrCount ++;
@@ -260,12 +477,15 @@ public class Patient {
         }
     }
 
-    //TODO make this a transaction
-
     // checkout the patient from the hospital.
     public static void checkoutPatient(Connection conn) throws Exception {
+        /*
+        Checkout Patient steps:
+        1. check if a medical record which has not checked out till now is present
+        2. check if the entered patientID is present in the data and not deleted.
+         */
         int patientID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
-        int medicalRecordID = getCurrentMedicalRecordID(conn, patientID);
+        int medicalRecordID = Patient.getCurrentMedicalRecordID(conn, patientID);
 
         // check if the patient is already checked out. If yes, then no need to checkout again
         if(medicalRecordID == -1) {
@@ -273,22 +493,42 @@ public class Patient {
             return;
         }
 
+        // check if the patient is not soft deleted.
+        int[] ids = {patientID};
+        ArrayList patients = Patient.getPatientByIDs(conn, ids);
+        if(patients.size() == 0) {
+            System.out.println("Patient not found or Patient has been deleted");
+            return;
+        }
+
         String updateMedicalRecord = "UPDATE medical_records SET checkout_date=curdate() WHERE mr_id="+medicalRecordID;
         String updatePatientStatus = "UPDATE patient SET current_status="+STATUS_NOT_IN_HOSPITAL+" WHERE patient_id="+patientID;
 
+        conn.setAutoCommit(false);
         try {
             releaseBed(conn, medicalRecordID);
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(updateMedicalRecord);
             stmt.executeUpdate(updatePatientStatus);
-            //TODO call create billing entry here
+            generateBillingRecord(conn, medicalRecordID);
+            conn.commit();
+            System.out.println("Successfully checked out the patient");
         } catch (SQLException e) {
             System.out.println("Error checking out the patient");
-
+            System.out.println(e.getMessage());
+            conn.rollback();
         }
+        conn.setAutoCommit(true);
     }
 
     public static void releaseBed(Connection conn, int medicalRecordID) throws Exception{
+        /*
+        Input:
+            Connection to the database
+            Medical record ID
+
+        Releases a bed in the ward and increases the bed count in the ward.
+         */
         String getMedicalRecord = "SELECT ward_id  FROM medical_records WHERE mr_id=" + medicalRecordID;
         Statement mrStatement = conn.createStatement();
         ResultSet mrRs = mrStatement.executeQuery(getMedicalRecord);
@@ -307,13 +547,58 @@ public class Patient {
                             " WHERE ward_id="+ward_id;
                     wardStatement.executeUpdate(updateWardAvailability);
                 }
-
-                // Remove ward ID from medical record
-                String updateMedicalRecord = "UPDATE medical_records SET ward_id = NULL WHERE mr_id="+medicalRecordID;
-                mrStatement.executeUpdate(updateMedicalRecord);
             } else {
                 System.out.println("No beds assigned to the patient");
             }
         }
     }
+
+    public static void generateBillingRecord(Connection conn, int mr_id) throws Exception{
+        /*
+        Input:
+            Connection to the database
+            Medical record id
+        Assumptions:
+            Called after checking the patient is already deleted
+        Sum up all the entries in the treatment table by adding all the treatement costs.
+        Add DEFAULT_REGISTRATION_CHARGES
+        Add ward charges by calculating the number of days for which the patient was in a ward.
+        Create a new billing record in the billing table with the total cost.
+         */
+        Statement stmt = conn.createStatement();
+        String treatmentQuery = "SELECT sum(cost) FROM treatment, treatment_cost"+
+                " WHERE treatment_cost.treatment_type = treatment.treatment_type AND treatment.mr_id="+mr_id;
+        ResultSet rs = stmt.executeQuery(treatmentQuery);
+        float treatmentCost = 0;
+        if(rs.next()) {
+            treatmentCost = rs.getInt(1);
+        } else {
+            throw new Exception("cannot find treatment records");
+        }
+
+        // Query the number of days spent in the ward
+        String numberOfDaysQuery = "SELECT datediff(curdate(), checkin_date) AS days FROM medical_records WHERE mr_id="+mr_id;
+        rs = stmt.executeQuery(numberOfDaysQuery);
+        float numdays = 0;
+        if(rs.next()) {
+            numdays = rs.getFloat("days");
+        }
+
+        // Get the medical record to find the ward to wich the patient was admitted
+        String getWardCharges = "SELECT ward_charges.charges FROM medical_records, ward, ward_charges WHERE "+
+                "medical_records.mr_id="+mr_id+" AND medical_records.ward_id=ward.ward_id AND ward.ward_type = ward_charges.ward_type"+
+                " AND medical_records.checkout_date IS NULL";
+        rs = stmt.executeQuery(getWardCharges);
+        float wardChargesPerDay = 0;
+        if(rs.next()){
+            wardChargesPerDay = rs.getFloat(1);
+        }
+
+        // Total cost is the cost of the treatments, ward costs and registration charges.
+        float totalCost = treatmentCost + numdays*wardChargesPerDay + DEFAULT_REGISTRATION_CHARGES;
+
+        String insertQuery = "INSERT INTO billing (mr_id, total_cost, payment_type) VALUES ("+mr_id+","+totalCost+", 'un updated')";
+        stmt.executeUpdate(insertQuery);
+    }
+
 }
