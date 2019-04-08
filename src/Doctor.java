@@ -2,7 +2,8 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 public class Doctor {
-
+	Treatment treatment = new Treatment();
+	
 	public void displayDoctorOptions(Connection conn) {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
 				+ "\n 3) View Current Treatment Details \n 4) Add Treatment"
@@ -18,6 +19,9 @@ public class Doctor {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				break;
+			case 5: 
+				treatment.updateTreatment(conn);
 				break;
 			default:
 				System.out.println("Invalid choice");
