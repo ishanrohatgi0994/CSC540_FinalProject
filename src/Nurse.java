@@ -26,13 +26,16 @@ public class Nurse {
 				break;
 		case 3: ward.viewWardInformation(conn);
 				break;
-		case 4: treatment.viewTreatmentDetails(conn);
+		case 4: treatment.viewCurrentTreatmentDetails(conn);
 				break;
 		case 5: mr.viewMedicalRecordForPatient(conn);
 				break;
+		default: 
+			System.out.println("Enter valid Input");
 		}
 	}
 	// Add Nurse
+	
 	public void addNurse(Connection conn) {
 		// Fetching Details to create new Nurse
 		
@@ -83,80 +86,86 @@ public class Nurse {
 		BigInteger phone = sc.nextBigInteger();
 		
 		try {
-			PreparedStatement stmt=conn.prepareStatement("Select * from Nurse where name =? and phone =?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			PreparedStatement stmt=conn.prepareStatement("Select * from Nurse where name =? and phone =?",
+					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			stmt.setString(1, name);
 			stmt.setBigDecimal(2, new BigDecimal(phone));
 			ResultSet rs = stmt.executeQuery(); 
 			String ch;
 			
-			if(rs.getFetchSize() == 0){
-				System.out.println("Nurse not found");
+			if (!rs.next()) {
+				System.out.print("Nurse not Found");
 			}
-			while(rs.next()) {
-				//System.out.println(rs.getString("name"));
-				System.out.println("Do you want to update name (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter new name");
-					sc.nextLine();
-					String new_name = sc.nextLine();
-					rs.updateString("name", new_name);
-					System.out.println("Update Nurse name successful");
-				}
-				System.out.println("Do you want to update age (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter new age");
-					int new_age = sc.nextInt();
-					rs.updateInt("age", new_age);
-					System.out.println("Update Nurse age successful");
-				}
-				System.out.println("Do you want to update gender (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter Gender");
-					String new_gender = sc.next();
-					rs.updateString("gender", new_gender);
-					System.out.println("Update Nurse gender successful");
-				}
-				System.out.println("Do you want to update phone (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter new phone number");
-					BigInteger new_phone = sc.nextBigInteger();
-					rs.updateBigDecimal("phone", new BigDecimal(new_phone));
-					System.out.println("Update Nurse phone successful");
-				}
-				System.out.println("Do you want to department name (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter new department");
-					sc.nextLine();
-					String new_department = sc.nextLine();
-					rs.updateString("department", new_department);
-					System.out.println("Update Nurse department successful");
-				}
-				System.out.println("Do you want to update job_title (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter new job title");
-					sc.nextLine();
-					String new_job_title = sc.nextLine();
-					rs.updateString("job_title", new_job_title);
-					System.out.println("Update Nurse Job Title successful");
-				}
-				System.out.println("Do you want to update address (Y/N) ?");
-				ch = sc.next();
-				if(ch.equals("Y") || ch.equals("y")) {
-					System.out.println("Enter new address");
-					sc.nextLine();
-					String new_address = sc.nextLine();
-					rs.updateString("address", new_address);
-					System.out.println("Update Nurse address successful");
-				}
+			else {
+				do {
+					System.out.println("Do you want to update name (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new name");
+						sc.nextLine();
+						String new_name = sc.nextLine();
+						rs.updateString("name", new_name);
+					}
+					System.out.println("Do you want to update age (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new age");
+						sc.nextLine();
+						int new_age = sc.nextInt();
+						rs.updateInt("age", new_age);
+					}
+					System.out.println("Do you want to update gender (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter Gender");
+						sc.nextLine();
+						String new_gender = sc.next();
+						rs.updateString("gender", new_gender);
+					}
+					System.out.println("Do you want to update phone (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new phone number");
+						sc.nextLine();
+						BigInteger new_phone = sc.nextBigInteger();
+						rs.updateBigDecimal("phone", new BigDecimal(new_phone));
+					}
+					System.out.println("Do you want to department name (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new department");
+						sc.nextLine();
+						String new_department = sc.nextLine();
+						rs.updateString("dept", new_department);
+					}
+					System.out.println("Do you want to update professional title (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new professional title");
+						sc.nextLine();
+						String new_job_title = sc.nextLine();
+						rs.updateString("professional_title", new_job_title);
+					}
+					System.out.println("Do you want to update address (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new address");
+						sc.nextLine();
+						String new_address = sc.nextLine();
+						rs.updateString("address", new_address);
+					}
+					System.out.println("Do you want to update status (Y/N) ?");
+					ch = sc.next();
+					if(ch.equals("Y") || ch.equals("y")) {
+						System.out.println("Enter new address");
+						sc.nextLine();
+						int status = sc.nextInt();
+						rs.updateInt("status", status);
+					}
 				rs.updateRow();	
-			}
-			System.out.println ("Updated, Thankyou!!");
+				} while (rs.next());
+				System.out.println("Updated Nurse successful");
+			}			
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
 			System.out.println("Update Nurse Record unsuccessful");
@@ -175,11 +184,11 @@ public class Nurse {
 			stmt.setString(1, name);
 			stmt.setBigDecimal(2, new BigDecimal(phone));
 			stmt.executeUpdate(); // Will delete if nurse exists else no side effects
-			System.out.println("Delete Nurse successful");
+			System.out.println("Deleted Nurse successful");
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			System.out.println("Delete Nurse unsuccessful");
+			System.out.println("Deletion of Nurse unsuccessful");
 		}
 	}
 
@@ -188,14 +197,21 @@ public class Nurse {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select * from Nurse");
 			ResultSet rs = stmt.executeQuery();
-			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \n");
-			while(rs.next()) {
-				System.out.println(rs.getString(2) + "\t\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) + 
-								"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8));
+			
+			if (!rs.next()) {
+				System.out.println("Nurses Information not found");
+			}
+			else {
+				System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \n");
+				do {
+					System.out.println(rs.getString(2) + "\t\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) + 
+							"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8));
+				} while (rs.next());
 			}
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
 			System.out.println("Error in viewing Nurses");
 		}
 	}
+	
+	
 }
