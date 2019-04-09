@@ -236,7 +236,22 @@ public class Ward {
 			}
 		}
 	}
-
+	
+	public static void getCurrentWardUsageStatus(Connection conn) {
+		try {
+			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, total_capacity, current_availability FROM Ward");
+			ResultSet rs = stmt.executeQuery(); 
+			System.out.println("---------------------------------------------------");
+			System.out.println("Current Ward usage status:");
+			System.out.println("---------------------------------------------------");
+			System.out.println("Ward_Id \t Total Capacity \t Current Avilability");
+			while(rs.next()) {
+				System.out.println(rs.getInt(1) + "\t \t " + rs.getInt(2) + "\t \t \t" + rs.getInt(3));
+			}
+		}catch(Exception e) {
+			System.out.println("Error occured while fetching ward usage");
+		}
+	}
 	public static void getWardUsageHistory(Connection conn) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter ward id");

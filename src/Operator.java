@@ -98,7 +98,7 @@ public class Operator {
 				}
 				break;
 			case 15:
-				Ward.getWardUsageHistory(conn);
+				Ward.getCurrentWardUsageStatus(conn);
 				break;
 			default:
 				System.out.println("Invalid Input");
