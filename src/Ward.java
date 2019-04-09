@@ -238,4 +238,10 @@ public class Ward {
 		}
 	}
 
+	public static void getWardUsageHistory(Connection conn) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
 }

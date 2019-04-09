@@ -97,6 +97,8 @@ public class Operator {
 					e.printStackTrace();
 				}
 				break;
+			case 15:
+				Ward.getWardUsageHistory(conn);
 			default:
 				System.out.println("Invalid Input");
 		}
