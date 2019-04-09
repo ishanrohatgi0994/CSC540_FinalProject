@@ -12,7 +12,7 @@ public class Admin {
 				+ "\n 5) Assign Nurse to ward \n 6) Update Operator \n 7)Update Nurse \n" +
 				" 8) Update Doctor \n" + " 9) Delete Operator \n " + " 10) Delete Nurse \n" +
 				" 11) Delete Doctor \n" + " 12) View All Operators \n" +
-				" 13) View All Nurses \n" + " 14) View All Doctors \n");
+				" 13) View All Nurses \n" + " 14) View All Doctors \n 15) View Operator By ID\n");
 		int choice = sc.nextInt();
 		switch (choice) {
 			case 1:
@@ -66,8 +66,15 @@ public class Admin {
 				break;
 			case 13:
 				nurse.viewAllNurses(conn);
+				break;
 			case 14:
 				doctor.viewAllDoctors(conn);
+				break;
+			case 15:
+				op.viewOperator(conn);
+				break;
+			default:
+				System.out.println("Invalid Option Selected");
 			
 		}
 	}

@@ -9,7 +9,6 @@ import java.sql.*;
 
 
 public class Ward {
-
 	public static void viewWardInformationForNurse(Connection conn) throws IOException {
 		// TODO Auto-generated method stub
 		int nurseID;
@@ -239,9 +238,32 @@ public class Ward {
 	}
 
 	public static void getWardUsageHistory(Connection conn) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter ward id");
+		int w_id = sc.nextInt();
+		System.out.println("Enter the start date(yyyy-mm-dd)");
+		String sd = sc.next();
+		System.out.println("Enter end date(yyyy-mm-dd)");
+		String ed = sc.next();
+		try {
+			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, COUNT(*) FROM medical_records where ward_id = ? "+
+					 "and checkin_date >= ? and checkout_date <= ?;");
+			stmt.setInt(1, w_id);
+			stmt.setString(2, sd);
+			stmt.setString(3, ed);
+			ResultSet rs = stmt.executeQuery(); 
+			System.out.println("---------------------------------------------------");
+			System.out.println("Ward usage for the given date range is:");
+			System.out.println("---------------------------------------------------");
+			System.out.println("Ward_Id \t Patient_Count");
+			while(rs.next()) {
+				System.out.println(w_id + "\t \t " + rs.getInt(2));
+			}	
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error occured while fetching Ward Usage Report for this date range");
+		}
+	}	
 
 }
