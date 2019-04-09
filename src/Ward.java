@@ -258,7 +258,9 @@ public class Ward {
 			System.out.println("Ward_Id \t Patient_Count");
 			while(rs.next()) {
 				System.out.println(w_id + "\t \t " + rs.getInt(2));
-			}	
+			}
+			if(rs.getInt(2)==0)
+				System.out.println("Change Date Range (Enter in Format Given) and Try again");
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
