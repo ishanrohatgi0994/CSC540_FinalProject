@@ -55,10 +55,11 @@ Admin
 Reporting tasks
 ---
 1. Generate Patient Medical History Report (Aniruddha)
-2. Generate Ward usage History (Harsh)
+2. Generate Ward usage History for particular ward(Harsh)
 3. Generate current ward usage percentage (Chinmai)
 4. All information of patients currently being treated by a given doctor (Ishan)
 5. Get all staff by role (Aniruddha)
+6. Get current ward availability status for all wards(Harsh)
 
 Additional APIs
 ---
