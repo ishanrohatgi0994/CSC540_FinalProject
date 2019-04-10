@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,20 +13,68 @@ public class MedicalRecord {
 	public void checkInPatient(Connection conn) {
 		System.out.println("Enter the Patient ID who needs to be checked_In");
 		int p_id = sc.nextInt();
-		String pattern = "yyyy-MM-dd";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		String date = simpleDateFormat.format(new Date());
-		//System.out.println(date);
-		try {
-			PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id)"+
-									"VALUES (?,?)");
-			stmt.setString(1, date);
-			stmt.setInt(2, p_id);
-			stmt.executeUpdate(); // Insertion done
-			System.out.println("Patient "+ p_id + " successfully checked into wolfware hospital");
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Patient Check-In failed. Please ensure correct patient id is inserted or Try after sometime");
+		int ward_id = -1;
+		System.out.println("Ward Required ? (Y/N)");
+		String ch = sc.next();
+		boolean flag = true;
+		if(ch.equals("Y") || ch.equals("y")) {
+			System.out.println("Enter ward type preference: 1) 1-Bed \n 2) 2-Bed \n 3) 3-Bed \n 4) 4-Bed \n");
+			int choice = sc.nextInt();
+			ward_id = Ward.getWardAvailaibilityByWardType(choice, conn);
+			if(ward_id == -1) {
+				System.out.println("Ward Not Available. Cannot Check-In");
+				flag = false;
+			}
+		}
+		if(flag) {
+			String pattern = "yyyy-MM-dd";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			String date = simpleDateFormat.format(new Date());
+			//System.out.println(date);
+			try {
+				conn.setAutoCommit(false); // Transaction
+				if(ward_id != -1) {
+					PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id,ward_id)"+
+										"VALUES (?,?,?)");
+					stmt.setString(1, date);
+					stmt.setInt(2, p_id);
+					stmt.setInt(3, ward_id);
+					stmt.executeUpdate(); // Insertion done
+				}
+				else {
+					PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id)"+
+							"VALUES (?,?)");
+					stmt.setString(1, date);
+					stmt.setInt(2, p_id);
+					stmt.executeUpdate(); // Insertion done
+				}
+				System.out.println("Patient "+ p_id + " successfully checked into wolfware hospital");
+				try {
+					if(ward_id != -1) {
+						Ward.decrementWardCapacity(ward_id, conn);
+						System.out.println("Decremented corresponding ward capacity");
+					}
+					conn.commit(); // Committing the transaction
+					
+				}catch (Exception e) {
+					conn.rollback();
+					System.out.println("Ward Capacity DecrementOperation Failed");
+				}
+			}catch(Exception e) {
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				//System.out.println(e.getMessage());
+				System.out.println("Patient Check-In failed. Please ensure correct patient id is inserted or Try after sometime");
+			}
+			try {
+				conn.commit();// No exceptions. Committing the transaction
+				conn.setAutoCommit(true);
+			}catch(Exception e) {
+				System.out.println("SQL Transaction commit Exception");
+			}
 		}
 	}
 

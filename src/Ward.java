@@ -252,6 +252,27 @@ public class Ward {
 			System.out.println("Error occured while fetching ward usage");
 		}
 	}
+	
+	public static int getWardAvailaibilityByWardType(int ward_type, Connection conn) {
+		try {
+			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id FROM Ward where ward_type = ? and current_availability > 0");
+			stmt.setInt(1, ward_type);
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.isBeforeFirst() ) {    
+			    System.out.println("No data");
+			    return -1; // Returns -1 if no such ward found
+			} 
+			if(rs.next()) {
+				System.out.println(rs.getInt(1));
+				return rs.getInt(1); // Returns the ward Id of the first ward found
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error Occured while fetching wards. Try Later");
+		}
+		return -1;
+	}
 	public static void getWardUsageHistory(Connection conn) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter ward id");
@@ -280,6 +301,23 @@ public class Ward {
 		catch(Exception e) {
 			System.out.println(e.getMessage());
 			System.out.println("Error occured while fetching Ward Usage Report for this date range");
+		}
+	}
+
+	public static void decrementWardCapacity(int ward_id, Connection conn){
+		try {
+			PreparedStatement stmt=conn.prepareStatement("Select ward_id, current_availability from WARD where ward_id = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			stmt.setInt(1, ward_id);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				int capacity = rs.getInt(2);
+				capacity = capacity - 1;
+				rs.updateInt("current_availability", capacity);
+				rs.updateRow();
+				//conn.commit();
+			}
+		}catch(Exception e) {
+			System.out.println("Error Occured while updating ward capacity");
 		}
 	}	
 
