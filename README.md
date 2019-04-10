@@ -69,3 +69,5 @@ Additional APIs
 4. Get operator by IDs (Harsh)
 5. Get ward by IDs (Chinmai)
 6. Pay bill API (just add valid credit card number information to the billing record, set payment status to paid and rollback if any error. (NOT ASSIGNED)
+7. Delete treatment
+8. view billing information
