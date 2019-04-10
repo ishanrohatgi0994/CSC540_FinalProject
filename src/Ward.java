@@ -255,17 +255,25 @@ public class Ward {
 	
 	public static int getWardAvailaibilityByWardType(int ward_type, Connection conn) {
 		try {
-			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id FROM Ward where ward_type = ? and current_availability > 0");
+			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, current_availability FROM Ward where ward_type = ? and current_availability > 0");
 			stmt.setInt(1, ward_type);
 			ResultSet rs = stmt.executeQuery();
 			if (!rs.isBeforeFirst() ) {    
 			    System.out.println("No data");
 			    return -1; // Returns -1 if no such ward found
 			} 
+			int ward_return =0;
 			if(rs.next()) {
-				System.out.println(rs.getInt(1));
-				return rs.getInt(1); // Returns the ward Id of the first ward found
+				//System.out.println(rs.getInt(1));
+				ward_return =  rs.getInt(1); // Returns the ward Id of the first ward found
 			}
+			rs.beforeFirst();
+			System.out.println("Ward ID \t Availability");
+			while(rs.next()) {
+				System.out.println(rs.getInt(1) +"\t \t" + rs.getInt(2));
+			}
+			System.out.println("Ward Assigned : " + ward_return );
+			return ward_return;
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
