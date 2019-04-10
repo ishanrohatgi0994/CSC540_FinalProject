@@ -71,3 +71,6 @@ Additional APIs
 6. Pay bill API (just add valid credit card number information to the billing record, set payment status to paid and rollback if any error. (NOT ASSIGNED)
 7. Delete treatment
 8. view billing information
+9. Get Ward Availability by Ward Type (Harsh)
+10.Reduce Ward capacity once assigned to a patient (Harsh)
+11. Show all wards information (Harsh)
