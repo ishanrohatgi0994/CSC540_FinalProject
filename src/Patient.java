@@ -245,15 +245,18 @@ public class Patient {
             if (br.readLine().equals("y")) {
                 String val = Utils.readAttribute(attribute, "Patient", false);
                 if(attribute.equals("ssn") || attribute.equals("phone")) {
-                    UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ", ";
+                    UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ",";
                 }
                 else if (attribute.equals("age")) {
-                    UpdateQuery = UpdateQuery + attribute + "=" + val + " ";
+                    UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
                 }
                 else {
-                    UpdateQuery = UpdateQuery + attribute + "='" + val+"', ";
+                    UpdateQuery = UpdateQuery + attribute + "='" + val+"',";
                 }
             }
+        }
+        if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
+        	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
         }
         UpdateQuery = UpdateQuery + "WHERE patient_id="+ID;
         //System.out.println(UpdateQuery);

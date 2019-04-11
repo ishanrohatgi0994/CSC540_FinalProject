@@ -58,7 +58,6 @@ public class Treatment {
 			stmt2.setInt(1, medicalRecordId);
 			stmt2.setInt(2, doctorId);
 			stmt2.setString(3, treatmentType);
-			System.out.println(stmt2.toString());
 			stmt2.executeUpdate(); // Insertion done
 			System.out.println("Treatment Details Insertion Successful");
 		}
@@ -107,7 +106,42 @@ public class Treatment {
 	
 	//Update Treatment for a given patient
 	public void updateTreatment(Connection conn){
-		System.out.println("Enter Treatment ID");
+		System.out.println("Enter Patient ID who's treatment details has to be deleted");
+		int patientId = sc.nextInt();
+		int medicalRecordId = -1;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("select * from medical_records where patient_id = ? "
+					+ " and checkout_date is null", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			stmt.setInt(1, patientId);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			medicalRecordId = rs.getInt(1);
+		}
+		catch(Exception e) {
+			System.out.println("Given Patient is not undergoing any treatment");
+			System.exit(0);
+		}
+		
+		try {				
+			PreparedStatement stmt2 = conn.prepareStatement("select * from treatment where mr_id = ? ");
+			stmt2.setInt(1, medicalRecordId);
+			ResultSet rs1 = stmt2.executeQuery();
+			
+			if (!rs1.next()) {
+				System.out.println("No Treatment details found for given patient id");
+			}
+			else {
+				System.out.println("Treatment ID \t Medical Record Id \t Doctor Id \t Treatment Type");
+				do {
+					System.out.println(rs1.getInt(1) + "\t\t " + rs1.getString(2) + "\t\t\t " + rs1.getInt(3) + " \t\t "+ rs1.getString(4));
+				} while (rs1.next());
+			}
+		}
+		catch (Exception e){
+			System.out.println("Unable to fetch treatment details for given patient id");
+		}
+		
+		System.out.println("Please Enter one of the Treatment IDs from above list");
 		int treatmentId = sc.nextInt();
 		try {
 			PreparedStatement stmt = conn.prepareStatement("Select * from treatment where tr_id =?",
@@ -122,7 +156,7 @@ public class Treatment {
 			else {
 				
 				do {
-					System.out.println("Do you want to Doctor ID(Y/N) ?");
+					System.out.println("Do you want to update Doctor ID(Y/N) ?");
 					ch = sc.next();
 					if(ch.equals("Y") || ch.equals("y")) {
 						sc.nextLine();
@@ -162,6 +196,55 @@ public class Treatment {
 		catch(Exception e) {
 			System.out.println(e.getMessage());
 			System.out.println("Treatment Details could not be updated");
+		}
+	}
+
+	//Delete Treatment
+	public void deleteTreatment(Connection conn) {
+		System.out.println("Enter Patient ID who's treatment details has to be deleted");
+		int patientId = sc.nextInt();
+		int medicalRecordId = -1;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("select * from medical_records where patient_id = ? "
+					+ " and checkout_date is null", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			stmt.setInt(1, patientId);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			medicalRecordId = rs.getInt(1);
+		}
+		catch(Exception e) {
+			System.out.println("Given Patient is not undergoing any treatment");
+			System.exit(0);
+		}
+		
+		try {				
+			PreparedStatement stmt2 = conn.prepareStatement("select * from treatment where mr_id = ? ");
+			stmt2.setInt(1, medicalRecordId);
+			ResultSet rs1 = stmt2.executeQuery();
+			
+			if (!rs1.next()) {
+				System.out.println("No Treatment details found for given patient id");
+			}
+			else {
+				System.out.println("Treatment ID \t Medical Record Id \t Doctor Id \t Treatment Type");
+				do {
+					System.out.println(rs1.getInt(1) + "\t\t " + rs1.getString(2) + "\t\t\t " + rs1.getInt(3) + " \t\t "+ rs1.getString(4));
+				} while (rs1.next());
+			}
+		}
+		catch (Exception e){
+			System.out.println("Unable to fetch treatment details for given patient id");
+		}
+		System.out.println("Enter the Treatment ID which has to be deleted from the above list");
+		int treatmentId = sc.nextInt();
+		try {
+			PreparedStatement stmt3=conn.prepareStatement("delete from treatment where tr_id = ?");
+			stmt3.setInt(1, treatmentId);
+			stmt3.executeUpdate();
+			System.out.println("Treatment Details deleted");
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error in deletion of treatment details");
 		}
 	}
 }
