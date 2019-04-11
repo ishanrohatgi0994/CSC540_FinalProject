@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Patient {
@@ -33,6 +35,11 @@ public class Patient {
     public static int STATUS_ADMITTED = 2;
     public static int STATUS_SOFT_DELETED = 3;
 
+    /*
+    Billing payment statuses
+     */
+    public static int STATUS_UNPAID = 0;
+    public static int STATUS_PAID = 1;
 
     /*
     DEFAULT_REGISTRATION_CHARGES is 100 dollars
@@ -604,4 +611,79 @@ public class Patient {
         stmt.executeUpdate(insertQuery);
     }
 
+    //TODO payment type or billing address (as we are only accepting credit card information, the payment type must be
+    // card.
+
+    // Interactively gets the pending bills for the patient and processes payment.
+    public static void viewAndPayBill(Connection conn) throws Exception{
+        /*
+        Input:
+            Connection to the database
+
+        1. Obtains the patient ID from the console.
+        2. Displays all the pending bills for the patient.
+        3. For the bill which is to be paid, obtain the credit card information and payment type.
+        4. If the credit card given is invalid, roll back the operations performed.
+         */
+
+        // Get the ID of the patient from the user
+        int patientID = Integer.parseInt(Utils.readAttribute("patientID", "Patient", false));
+        // Begin transaction
+        conn.setAutoCommit(false);
+        try {
+            // Query to get all the pending bills to be paid
+            String queryPendingBills = "SELECT DISTINCT bill_id, total_cost FROM billing, medical_records, patient WHERE " +
+                    "billing.mr_id=medical_records.mr_id AND billing.payment_status=" + STATUS_UNPAID + " AND medical_records.patient_id=" + patientID;
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(queryPendingBills);
+            // check if there are any pending bills to be paid by the user
+            boolean printed = false;
+            while (rs.next()) {
+                // display details of all the pending bills
+                System.out.println("---");
+                System.out.println("BILL ID: "+rs.getInt("bill_id"));
+                System.out.println("TOTAL COST: "+rs.getDouble("total_cost"));
+                System.out.println("---");
+                printed = true;
+            }
+            // if no pending bills, return
+            if(!printed) {
+                System.out.println("No pending bills available");
+                return;
+            }
+            //Get the bill which is to be paid now
+            int billingID = Integer.parseInt(Utils.readAttribute("billing ID", "Bill to be paid", false));
+            // Get the credit card number for the bill
+            String creditCardInfo = Utils.readAttribute("credit card", "Bill", false);
+            // Get the payment type for the bill
+            String payment_type = Utils.readAttribute("payment type", "Bill", false);
+            // Regular expression for credit card number
+            Pattern p = Pattern.compile("^(\\d{4}\\-){3}\\d{4}$");
+            Matcher m = p.matcher(creditCardInfo);
+            // check if the card number entered matches the regular expression
+            if(m.find()) {
+                // valid credit card information. Insert into the database
+
+                // update query to update the billing information
+                String updateBilling = "UPDATE billing SET payment_status = "+STATUS_PAID+", payment_type = '"+payment_type
+                        +"', credit_card="+creditCardInfo+" WHERE bill_id = "+billingID;
+                Statement s = conn.createStatement();
+                s.executeUpdate(updateBilling);
+                // No error till here, commit the transaction
+                conn.commit();
+            } else {
+                // The entered credit card information is invalid
+                System.out.println("Invalid credit card information");
+                // roll back the transaction
+                conn.rollback();
+            }
+        } catch (SQLException e) {
+            // Error during execution of the payment
+            System.out.println("Error processing payment");
+            System.out.println(e.getMessage());
+            // Roll back the transaction.
+            conn.rollback();
+        }
+        conn.setAutoCommit(true);
+    }
 }

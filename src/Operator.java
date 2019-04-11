@@ -17,7 +17,7 @@ public class Operator {
 				+ "\n 6) Update Ward \n 7) Update Medical Record"
 				+ "\n 8) Delete Nurse \n 9) Delete Doctor \n 10) Delete Patient"
 				+ "\n 11) Delete Ward \n 12) Assign Patient to Ward \n 13) Checkout Patient \n 14) View Patient\n"
-				+" 15) View Reports");
+				+" 15) View Reports\n 16) view and pay bill\n");
 			// Check out patient involves generating Billing too
 		int choice = sc.nextInt();
 		switch (choice){
@@ -99,6 +99,13 @@ public class Operator {
 				break;
 			case 15:
 				Ward.getCurrentWardUsageStatus(conn);
+				break;
+			case 16:
+				try {
+					Patient.viewAndPayBill(conn);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
 				break;
 			default:
 				System.out.println("Invalid Input");

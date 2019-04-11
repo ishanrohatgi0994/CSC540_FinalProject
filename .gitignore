@@ -1,0 +1,5 @@
+CSC540_Final_Project.iml
+.idea/libraries/**
+.idea/**
+out/**
+out/production/CSC540_Final_Project/*.class
