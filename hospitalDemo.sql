@@ -335,3 +335,10 @@ INSERT INTO operator
 VALUES
 ("John",45,"M",5640000000,"Office","Billing staff","798 XYZ St , Rochester NY 54"),
 ("Ava",55,"F",7770000000,"Office","Front Desk Staff","425 RG St , Raleigh NC 27");
+
+insert into nurse(name, age,gender,phone,dept, professional_title,address,status) 
+values ('Carol', 55, 'F', 911, 'ER', null, '351 MH St , Greensboro NC 27', 1),
+('Olivia', 27, 'F', 799, 'Neurology', null, '325 PD St , Raleigh NC 27', 1);
+	
+insert into ward(total_capacity, current_availability, ward_type, nurse_id)
+values (4, 4, 4, 1), (4, 4, 4, 1), (2, 2, 2, 2), (2, 2, 2, 2);
