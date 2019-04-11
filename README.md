@@ -72,5 +72,5 @@ Additional APIs
 7. Delete treatment
 8. view billing information
 9. Get Ward Availability by Ward Type (Harsh)
-10.Reduce Ward capacity once assigned to a patient (Harsh)
+10. Reduce Ward capacity once assigned to a patient (Harsh)
 11. Show all wards information (Harsh)
