@@ -90,7 +90,7 @@ CREATE TABLE `medical_records` (
   `checkout_date` date DEFAULT NULL,
   `patient_id` int(11) NOT NULL,
   `ward_id` int(11) DEFAULT NULL,
-  `doc_id` int(11) NOT NULL,
+  `doc_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`mr_id`),
   KEY `patient_id_idx` (`patient_id`),
   KEY `doc_id_idx` (`doc_id`),
@@ -318,3 +318,20 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2019-04-10 11:38:36
+# Insert statements:
+
+#1) Doctor:
+INSERT INTO doctor
+(name,age,gender,phone,dept,professional_title,address,status)
+VALUES
+("Mary",40,"F",6540000000,"Neurology","senior","90 ABC St , Raleigh NC 27",1),
+("Emma",55,"F",5460000000,"Oncological Surgery","Senior surgeon","49 ABC St , Raleigh NC 27",1),
+("Peter",52,"M",7240000000,"Oncological Surgery","Anesthetist","475 RG St , Raleigh NC 27",1);
+
+# Operators
+
+INSERT INTO operator
+(name,age,gender,phone,department,job_title,address)
+VALUES
+("John",45,"M",5640000000,"Office","Billing staff","798 XYZ St , Rochester NY 54"),
+("Ava",55,"F",7770000000,"Office","Front Desk Staff","425 RG St , Raleigh NC 27");
