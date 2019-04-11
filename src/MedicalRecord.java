@@ -165,7 +165,7 @@ public class MedicalRecord {
 		if(mr_id == -1)
 			System.out.println("Patient Record Not found");
 		else {
-			// Fetch details for this mr_id and print - Aniruddha
+			// Fetch details for this mr_id and print
 			String query = "SELECT mr_id, doc_id, prescription, diagnosis, ward_id, checkin_date FROM medical_records WHERE "+
 					"mr_id="+mr_id;
 			try {
