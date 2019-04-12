@@ -255,7 +255,7 @@ public class Ward {
 	
 	public static int getWardAvailaibilityByWardType(int ward_type, Connection conn) {
 		try {
-			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, current_availability FROM Ward where ward_type = ? and current_availability > 0");
+			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, current_availability FROM ward where ward_type = ? and current_availability > 0");
 			stmt.setInt(1, ward_type);
 			ResultSet rs = stmt.executeQuery();
 			if (!rs.isBeforeFirst() ) {    

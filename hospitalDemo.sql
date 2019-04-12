@@ -320,6 +320,27 @@ UNLOCK TABLES;
 -- Dump completed on 2019-04-10 11:38:36
 # Insert statements:
 
+/* Patients */
+insert into patient (patient_id, ssn, name, phone, age, gender, address, current_status)
+values
+(1001, 000011234, 'David', 9191233324, 39, 'M', '69 ABC St , Raleigh NC 27730', 0),
+(1002, 000021234, 'Sarah', 9195633478, 48, 'F', '81 DEF St , Cary NC 27519', 0),
+(1003, 000031234, 'Joseph', 9199572199, 32, 'M', '31 OPG St , Cary NC 27519', 0),
+(1004, 000041234, 'Lucy', 9198387123, 34, 'F', '10 TBC St , Raleigh NC 27730', 1);
+
+/* treatment_cost */
+INSERT INTO `treatment_cost` VALUES ('Blood test',8769.26),
+('Bone Density test',2362.32),
+('CAT scan',1453.43),
+('CT scan',3489.8),
+('Eye test',2478.76),
+('MRI',5737.87),
+('Normal Consultation',500),
+('PT test',984.98),
+('RBC count test',7453.36),
+('Skin test',2853.41),
+('X-ray',530.57);
+
 #1) Doctor:
 INSERT INTO doctor
 (name,age,gender,phone,dept,professional_title,address,status)
@@ -348,3 +369,9 @@ values ('Hospitalization', 'nervine', 2019-03-01, null, 1, 1, 1),
 ('Hospitalization', 'nervine', 2019-03-10, null, 2, 2, 1),
 ('Hospitalization', 'nervine', 2019-03-15, null, 3, 1, 1),
 ('Surgeon, Hospitalization', 'analgesic', 2019-03-17, 2019-03-21, 4, 3, 2);
+
+insert into treatment (mr_id, doc_id, treatment_type) values
+(1, 1, "Eye Test"),
+(2, 3, "Skin test"),
+(3, 2, "PT test"),
+(4, 3, "Normal Consultation");

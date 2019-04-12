@@ -1,4 +1,5 @@
 
+import javax.xml.transform.Result;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -45,6 +46,14 @@ public class Patient {
     DEFAULT_REGISTRATION_CHARGES is 100 dollars
      */
     public static float DEFAULT_REGISTRATION_CHARGES = 100;
+
+    /*
+    Types of payment available:
+     */
+    public static String PAYMENT_TYPE_CREDIT_CARD = "Credit Card";
+    public static String PAYMENT_TYPE_DEBIT_CARD = "Debit Card";
+    public static String PAYMENT_TYPE_CASH = "Cash";
+    public static String PAYMENT_TYPE_CHECK = "Check";
 
     // get Patient objects through a list of IDs this excludes all the patients which are deleted
     public static ArrayList<Patient> getPatientByIDs(Connection conn, int[] ids) throws Exception {
@@ -145,18 +154,17 @@ public class Patient {
             System.out.println("Error fetching details of patients "+ids);
         }
     }
-    //TODO Check error condition:
-    // if phone is entered with special characters
-    // if ssn is entered with special characters
 
-    //TODO indicate what 0, 1 and 2 means when asking for the current status.
 
     // Read details of a patient interactively and insert to the database.
-    public static void addPatient(Connection conn) throws Exception    {
+    static void addPatient(Connection conn) throws Exception    {
         /*
         Input:
             Connection to the database.
         Interactively asks for the details of the patient and creates a patient record.
+
+        If the patient was soft-deleted, just change the current status of the patient to the one the user inputs.
+        else create a new patient entry
          */
 
         // initialize required attributes
@@ -188,6 +196,7 @@ public class Patient {
             age = Integer.parseInt(ageString);
         }
         // current status of the patient
+        System.out.println("Enter one of the following for current status: 0 - Not in hospital, 1 - not admitted, 2 - admitted.");
         current_status = Integer.parseInt(Utils.readAttribute("current status ", "Patient", false));
         while(current_status != STATUS_ADMITTED && current_status != STATUS_NOT_IN_HOSPITAL && current_status != STATUS_OUTPATIENT) {
             System.out.println("Invalid status "+current_status+" entered. Try again.");
@@ -201,6 +210,24 @@ public class Patient {
 
         // execute the statement
         try {
+            // check if the patient with the same name and phone number exists
+            String selectPatientBeforeInsert = "SELECT * from patient where name='"+name+"' AND phone="+phone;
+            Statement s = conn.createStatement();
+            ResultSet r = s.executeQuery(selectPatientBeforeInsert);
+            if (r.next()) {
+                 if (r.getInt("current_status") == STATUS_SOFT_DELETED) {
+                     // if there is an entry with the same nanme and phone number, update the current status to set to the currently inputted status.
+                     String updatePatientStatus = "UPDATE patient SET current_status=" + current_status + " WHERE name='" + name + "' AND phone=" + phone;
+                     Statement updatePatient = conn.createStatement();
+                     updatePatient.executeUpdate(updatePatientStatus);
+                     System.out.println("Returning patient. Updated the status of the patient");
+                     return;
+                 } else {
+                     System.out.println("Patient already exists. Cannot insert patient");
+                     return;
+                 }
+            }
+            // if no records which were soft deleted are present, insert a new record.
             PreparedStatement ps = conn.prepareStatement("INSERT INTO patient (name, address, ssn, phone, current_status, age, gender)"+
                     " VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, name);
@@ -302,14 +329,14 @@ public class Patient {
         }
     }
 
-    // TODO if ran twice on the same medical record, error out.
-    // assign ward to a patient interactively
-    public static void assignWardToPatient(Connection conn) throws Exception {
+    // assign/update ward to a patient interactively by asking for thier preferred ward type
+    public static void assignOrUpdateWardToPatient(Connection conn) throws Exception {
         /*
         Input:
             Connection to the database.
 
         Assigns ward to a patient if
+        1. Ward type queried has at least 1 bed available
         1. if patient record exists
         2. if patient has not been deleted
         3. Patient is currently not checked out.
@@ -320,11 +347,24 @@ public class Patient {
         Transaction part:
         1. Update medical record of the patient
         2. Update the patient status and set it to be currently Admitted.
+        3. Update the current availability of the new ward.
+        4. Release bed if updating the patient's ward.
+        NOTE: updation of ward is only to accomodate for human mistakes while assigning wards. Generation of bill will
+        assume the paitnet is present in the newly assigned ward from the start date till end date.
          */
         int wardID, patientID;
-        wardID = Integer.parseInt(Utils.readAttribute("ID", "Ward", false));
+        // Get the patient id from the user
         patientID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
 
+        // Get the ward type preference of the customer
+        System.out.println("Enter ward type preference: 1) 1-Bed \n 2) 2-Bed \n 3) 3-Bed \n 4) 4-Bed \n");
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+        wardID = Ward.getWardAvailaibilityByWardType(choice, conn);
+        if(wardID == -1) {
+            System.out.println("Ward Not Available. Cannot Check-In");
+            return;
+        }
         // get current medical record ID for the patient
         int medicalRecordID = getCurrentMedicalRecordID(conn, patientID);
         if(medicalRecordID == -1) {
@@ -351,7 +391,6 @@ public class Patient {
                 if(!rs.wasNull()) {
                     System.out.println("Patient already assigned a ward "+rs.getInt(1));
                     System.out.println("Do you want to update the ward? Cost still will be taken from the date of check in (y/n)");
-                    Scanner sc = new Scanner(System.in);
                     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                     String ip = br.readLine();
                     if(!ip.equals("y")){
@@ -365,7 +404,6 @@ public class Patient {
                 System.out.println("Medical record not found or patient deleted!");
                 return;
             }
-
             // check if at least 1 bed is available in the ward
             String getCurrentAvailability = "SELECT current_availability FROM ward WHERE ward_id="+wardID;
             stmt = conn.createStatement();
@@ -389,6 +427,11 @@ public class Patient {
             String updateWard = "UPDATE ward SET current_availability = "+(currentAvailability-1)+" WHERE ward_id="+wardID;
             stmt = conn.createStatement();
             stmt.executeUpdate(updateWard);
+
+            // update the status of the patient to currently admitted.
+            String updatePatient = "UPDATE patient SET current_status="+STATUS_ADMITTED+" WHERE patient_id="+patientID;
+            stmt = conn.createStatement();
+            stmt.executeUpdate(updatePatient);
 
             //Commit the transaction
             conn.commit();
@@ -427,7 +470,6 @@ public class Patient {
         return -1;
     }
 
-    // TODO what about the current list of medical records.
     // view medical history for a patient
     public static void viewMedicalHistory(Connection conn) throws Exception {
         /*
@@ -451,14 +493,14 @@ public class Patient {
             System.out.println("-----");
             int mrCount = 0;
             while(rs.next()) {
+                System.out.println("#####");
                 System.out.println("MEDICAL RECORD ID: "+rs.getInt("mr_id"));
                 System.out.println("TREATED DOCTOR ID: "+rs.getInt("doc_id"));
-                System.out.println("TREATMENT DOCTOR DETAILS: ");
+                System.out.println("RESPONSIBLE DOCTOR DETAILS: ");
 
-                // TODO uncomment when Doctor APIs are implemented
-                // int[] docIDs = {rs.getInt(2)};
-                // Doctor.getDoctorByIDs(conn, docIDs);
-                // PrintDoctor()
+                int[] docIDs = {rs.getInt(2)};
+                Doctor d = new Doctor();
+                d.viewDoctorsByIds(conn, docIDs);
 
                 System.out.println("PRESCRIPTION GIVEN: "+rs.getString("prescription"));
                 System.out.println("DIAGNOSIS: "+rs.getString("diagnosis"));
@@ -471,14 +513,13 @@ public class Patient {
                     System.out.println("\tTREATMENT: "+treatments.getString(1));
                     System.out.println("\tSPECIALITY DOCTOR: "+treatments.getInt(2));
 
-                    // TODO uncomment when Doctor APIs are implemented
-                    // int[] specialityDoctor = {treatments.getInt(2)};
-                    // Doctor.getDoctorByIDs(conn, specialityDoctor);
-                    // PrintDoctor();
+                    int[] specialityDoctor = {treatments.getInt(2)};
+                    d.viewDoctorsByIds(conn, specialityDoctor);
 
                     System.out.println();
                 }
                 mrCount ++;
+                System.out.println("#####");
             }
             System.out.println("-----");
         } catch(SQLException e) {
@@ -517,10 +558,10 @@ public class Patient {
         conn.setAutoCommit(false);
         try {
             releaseBed(conn, medicalRecordID);
+            generateBillingRecord(conn, medicalRecordID);
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(updateMedicalRecord);
             stmt.executeUpdate(updatePatientStatus);
-            generateBillingRecord(conn, medicalRecordID);
             conn.commit();
             System.out.println("Successfully checked out the patient");
         } catch (SQLException e) {
@@ -598,21 +639,27 @@ public class Patient {
         String getWardCharges = "SELECT ward_charges.charges FROM medical_records, ward, ward_charges WHERE "+
                 "medical_records.mr_id="+mr_id+" AND medical_records.ward_id=ward.ward_id AND ward.ward_type = ward_charges.ward_type"+
                 " AND medical_records.checkout_date IS NULL";
+        System.out.println(getWardCharges);
         rs = stmt.executeQuery(getWardCharges);
-        float wardChargesPerDay = 0;
+        double wardChargesPerDay = 0;
         if(rs.next()){
-            wardChargesPerDay = rs.getFloat(1);
+            wardChargesPerDay = rs.getDouble(1);
+            System.out.println("inside if: "+ wardChargesPerDay);
         }
 
         // Total cost is the cost of the treatments, ward costs and registration charges.
-        float totalCost = treatmentCost + numdays*wardChargesPerDay + DEFAULT_REGISTRATION_CHARGES;
+        double totalCost = treatmentCost + numdays*wardChargesPerDay + DEFAULT_REGISTRATION_CHARGES;
+        System.out.println("treatment cost: "+ treatmentCost);
+        System.out.println("Number of days:"+numdays);
+        System.out.println("ward_charges per day = "+wardChargesPerDay);
+        System.out.println("total ward charges: "+  numdays*wardChargesPerDay);
+        System.out.println("total cost: "+totalCost);
+        System.out.println("Medical record ID: "+mr_id);
 
-        String insertQuery = "INSERT INTO billing (mr_id, total_cost, payment_type) VALUES ("+mr_id+","+totalCost+", 'un updated')";
+        String insertQuery = "INSERT INTO billing (mr_id, total_cost, payment_status) VALUES ("+mr_id+","+totalCost+", "+STATUS_UNPAID+")";
         stmt.executeUpdate(insertQuery);
     }
 
-    //TODO payment type or billing address (as we are only accepting credit card information, the payment type must be
-    // card.
 
     // Interactively gets the pending bills for the patient and processes payment.
     public static void viewAndPayBill(Connection conn) throws Exception{
@@ -622,8 +669,15 @@ public class Patient {
 
         1. Obtains the patient ID from the console.
         2. Displays all the pending bills for the patient.
-        3. For the bill which is to be paid, obtain the credit card information and payment type.
-        4. If the credit card given is invalid, roll back the operations performed.
+        3. For the bill which is to be paid, obtain the payment information.
+        4. If the payment information is card, obtain the card number
+        5. If card number inputted is invalid, roll back the transaction.
+        6. Update the payment details
+        7. Update the bill and set the status to paid
+        Transaction part:
+            1. Get the payment information and the card number if requried
+            2. update payment details
+            3. Update bill and set status to paid.
          */
 
         // Get the ID of the patient from the user
@@ -653,30 +707,50 @@ public class Patient {
             }
             //Get the bill which is to be paid now
             int billingID = Integer.parseInt(Utils.readAttribute("billing ID", "Bill to be paid", false));
-            // Get the credit card number for the bill
-            String creditCardInfo = Utils.readAttribute("credit card", "Bill", false);
-            // Get the payment type for the bill
-            String payment_type = Utils.readAttribute("payment type", "Bill", false);
-            // Regular expression for credit card number
-            Pattern p = Pattern.compile("^(\\d{4}\\-){3}\\d{4}$");
-            Matcher m = p.matcher(creditCardInfo);
-            // check if the card number entered matches the regular expression
-            if(m.find()) {
-                // valid credit card information. Insert into the database
 
-                // update query to update the billing information
-                String updateBilling = "UPDATE billing SET payment_status = "+STATUS_PAID+", payment_type = '"+payment_type
-                        +"', credit_card="+creditCardInfo+" WHERE bill_id = "+billingID;
-                Statement s = conn.createStatement();
-                s.executeUpdate(updateBilling);
-                // No error till here, commit the transaction
-                conn.commit();
-            } else {
-                // The entered credit card information is invalid
-                System.out.println("Invalid credit card information");
-                // roll back the transaction
-                conn.rollback();
+            // Get payment type information for the patient
+            System.out.println("Enter your payment type:\n 1) Credit Card\n 2) Debit Card\n 3) Cash\n 4) Check\n");
+            Scanner sc = new Scanner(System.in);
+            String payment_type;
+            switch(sc.nextInt()) {
+                case 1:
+                    payment_type = PAYMENT_TYPE_CREDIT_CARD;
+                    break;
+                case 2:
+                    payment_type = PAYMENT_TYPE_DEBIT_CARD;
+                    break;
+                case 3:
+                    payment_type = PAYMENT_TYPE_CASH;
+                    break;
+                case 4:
+                    payment_type = PAYMENT_TYPE_CHECK;
+                    break;
+                default:
+                    System.out.println("Invalid payment type");
+                    return;
             }
+            // update query to update the billing information
+            String updateBilling = "UPDATE billing SET payment_status = "+STATUS_PAID+", payment_type = '"+payment_type
+                    +"'";
+            if(payment_type == PAYMENT_TYPE_CREDIT_CARD || payment_type == PAYMENT_TYPE_DEBIT_CARD) {
+                // Get the credit card number for the bill
+                String cardInfo = Utils.readAttribute("credit card", "Bill", false);
+                // Regular expression for credit card number
+                Pattern p = Pattern.compile("^(\\d{4}\\-){3}\\d{4}$");
+                Matcher m = p.matcher(cardInfo);
+                if(m.find()) {
+                    updateBilling = updateBilling + ", card='"+cardInfo+"'";
+                } else {
+                    System.out.println("Invalid card information. Payment failed");
+                    conn.rollback();
+                    return;
+                }
+            }
+            updateBilling = updateBilling + " WHERE bill_id="+billingID;
+            System.out.println(updateBilling);
+            Statement s = conn.createStatement();
+            s.executeUpdate(updateBilling);
+            conn.commit();
         } catch (SQLException e) {
             // Error during execution of the payment
             System.out.println("Error processing payment");

@@ -82,7 +82,7 @@ public class Operator {
 				break;
 			case 12:
 				try {
-					Patient.assignWardToPatient(conn);
+					Patient.assignOrUpdateWardToPatient(conn);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
