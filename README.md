@@ -101,10 +101,7 @@ Pending Tasks
 3. Current Ward usage percentage report.
 
 ## Chinmai
-1. Get all nurses by role
-2. Handle null logic in operators.
-4. medical record data dump
-5. check if nurse is present before inserting
+1. check if nurse is present before inserting
 
 ## Ishan
 1. Get all staff by role
