@@ -16,6 +16,7 @@ public class Nurse {
 	Ward ward = new Ward();
 	
 	public void displayNurseOptions(Connection conn) {
+		//Function used to display the actions that can be performed by Nurse
 		System.out.println("\n " +
 				"1) Update Medical Record \n " +
 				"2) Enter Treatment (Test) Details \n " +
@@ -48,17 +49,16 @@ public class Nurse {
 	
 	//Add Nurse
 	public void addNurse(Connection conn) throws Exception{
-		// Fetching Details to create new Nurse
+		// Getting details associated with the Nurse and creating a new Nurse record in DB.
 		
 		String name, address, gender, dept;
         BigInteger phone;
         Integer age;
-
-        // Interactively read each attributes
-        // read name of the patient
+        
+        //Get Name of the Nurse.
         name = Utils.readAttribute("name", "Nurse", false);
         
-        // read age of the patient
+        //Get age of the Nurse.
         String ageString = Utils.readAttribute("age", "Patient", true);
         if(ageString.equals("")){
             age = null;
@@ -66,25 +66,30 @@ public class Nurse {
             age = Integer.parseInt(ageString);
         }
         
+        //Get Gender of Nurse.
         gender = Utils.readAttribute("Gender", "Patient", true);
         if(gender.equals("")){
             gender = null;
         }
-        
+        //Get Phone Number of Nurse
         phone = new BigInteger(Utils.readAttribute("phone number", "Nurse", false));
-
+        
+        //Get Department of Nurse
         dept = Utils.readAttribute("department", "Nurse", true);
+        
+        //Get Address of Nurse
         address = Utils.readAttribute("address", "Nurse", true);
         
         if(address.equals("")) {
             address = null;
         }        
-        
+        //Get Professional Title of Nurse
         String title = Utils.readAttribute("professional title", "Nurse", true);
         if(title.equals("")){
             title = null;
         }
-		int status = 1;
+		int status = 1; //Setting the Status of Nurse as 1 indicating that the nurse is a staff of hospital.
+		//Setting the Status of Nurse as 0 indicates that the nurse is no longer staff of hospital.
 		
 		try {
 			PreparedStatement stmt=conn.prepareStatement("INSERT INTO Nurse (name,age,gender,phone,dept,professional_title,address,status)"+
@@ -112,6 +117,10 @@ public class Nurse {
 	
 	//Update Nurse
 	public void updateNurse(Connection conn) throws Exception {
+		//Function used to update the details of the Nurse.
+		//Get Phone Number and Name of the Nurse whose details has to be updated as the combination of Nurse's name
+		//and Nurse's phone number are unique.
+		//Nurse's ID also can be used to identify unique Nurse.
 		String name = Utils.readAttribute("name", "Nurse", false);
 		System.out.println("Enter the phone number");
 		BigInteger phone = new BigInteger(Utils.readAttribute("phone number", "Nurse", false));
@@ -154,9 +163,11 @@ public class Nurse {
 	}
 	
 	//Delete Nurse
-
-	//Delete Nurse
 	public void deleteNurse(Connection conn) {
+		//Function used to delete the details of the Nurse.
+		//Get Phone Number and Name of the Nurse whose details has to be updated as the combination of Nurse's name
+		//and Nurse's phone number are unique.
+		//Nurse's ID also can be used to identify unique Nurse.
 		System.out.println("Enter Nurse name who needs to be deleted");
 		String name = sc.nextLine();
 		System.out.println("Enter the phone number");
@@ -164,7 +175,7 @@ public class Nurse {
 		
 		try {
 			PreparedStatement stmt=conn.prepareStatement("update nurse set status = ? where name =? and phone =?");
-			stmt.setInt(1, 0);
+			stmt.setInt(1, 0);//Setting the Status of the Nurse as 0 which indicates that the nurse is out of hospital.
 			stmt.setString(2, name);
 			stmt.setBigDecimal(3, new BigDecimal(phone));
 			stmt.executeUpdate(); // Will delete if nurse exists else no side effects
@@ -175,8 +186,6 @@ public class Nurse {
 			System.out.println("Deletion of Nurse unsuccessful");
 		}
 	}
-
-	//View all Nurses
 
 	//View all nurses
 	public void viewAllNurses(Connection conn) {
@@ -198,6 +207,4 @@ public class Nurse {
 			System.out.println("Error in viewing Nurses");
 		}
 	}
-	
-	
 }
