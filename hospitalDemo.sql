@@ -341,6 +341,15 @@ INSERT INTO `treatment_cost` VALUES ('Blood test',8769.26),
 ('Skin test',2853.41),
 ('X-ray',530.57);
 
+# Ward Charges:
+INSERT INTO ward_charges
+(ward_type,charges)
+VALUES
+(1,50),
+(2,50),
+(3,100),
+(4,100);
+
 #1) Doctor:
 INSERT INTO doctor
 (name,age,gender,phone,dept,professional_title,address,status)

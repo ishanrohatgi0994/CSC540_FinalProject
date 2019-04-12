@@ -48,7 +48,6 @@ public class Ward {
 
 	}
 
-	//Ishan Implementation
 	// Add Ward
 	public static void addWard(Connection conn) throws IOException {
 		// initialize required attributes
@@ -237,6 +236,10 @@ public class Ward {
 		}
 	}
 	
+	/*
+	 * getCurrentWardUsageStatus()is a report used to view current availability and total capacity and percentage usage for all wards of all types.
+	 * It is useful for Hospital Staff to check number of patients in hospital and also total available beds.
+	 */
 	public static void getCurrentWardUsageStatus(Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, total_capacity, current_availability FROM Ward");
@@ -244,15 +247,19 @@ public class Ward {
 			System.out.println("---------------------------------------------------");
 			System.out.println("Current Ward usage status:");
 			System.out.println("---------------------------------------------------");
-			System.out.println("Ward_Id \t Total Capacity \t Current Avilability");
+			System.out.println("Ward_Id \t Total Capacity \t Current Avilability \t Percent Usage");
 			while(rs.next()) {
-				System.out.println(rs.getInt(1) + "\t \t " + rs.getInt(2) + "\t \t \t" + rs.getInt(3));
+				System.out.println(rs.getInt(1) + "\t \t " + rs.getInt(2) + "\t \t \t" + rs.getInt(3) + "\t \t \t" + (((rs.getInt(2)-rs.getInt(3))*100)/rs.getInt(2)) + "%");
 			}
 		}catch(Exception e) {
 			System.out.println("Error occured while fetching ward usage");
 		}
 	}
 	
+	/*
+	 * getWardAvailaibilityByWardType() is used to display all wards available for the given ward type and return the first available ward. 
+	 * This information is useful for check-in(operator) staff to check ward availability based on patient preference.
+	 */
 	public static int getWardAvailaibilityByWardType(int ward_type, Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, current_availability FROM ward where ward_type = ? and current_availability > 0");
@@ -281,6 +288,10 @@ public class Ward {
 		}
 		return -1;
 	}
+	
+	/*
+	 * getWardUsageHistory() is a report used to view ward usage(total patients admitted in that ward) report for the given Ward Id and given date range
+	 */
 	public static void getWardUsageHistory(Connection conn) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter ward id");
@@ -312,6 +323,9 @@ public class Ward {
 		}
 	}
 
+	/*
+	 * decrementWardCapacity() is used to decrement ward capacity once it is assigned to a patient during check-in
+	 */
 	public static void decrementWardCapacity(int ward_id, Connection conn){
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select ward_id, current_availability from WARD where ward_id = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);

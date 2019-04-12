@@ -10,6 +10,21 @@ import java.util.Scanner;
 public class MedicalRecord {
 
 	Scanner sc = new Scanner(System.in);
+	/*
+	 * 
+	  CheckInPatient() is used to create the medical/check-in(in our case) record of patient when he enters the hospital for treatment.Details like Patient ID,
+	  Check-In date and Ward_id(Not always) are filled in.When a patient check’s in, if a ward is required for them to be admitted into, their preference of
+	  ward-type (1-bed,2-bed,3-bed,4-bed wards)is determined, and accordingly availability of ward is checked. If a ward with the patient’s preference is found, 
+	  Patient is assigned to that ward and the ward_id is also fed in during check-in.The corresponding ward capacity is also decreased.
+	  
+	  A transaction is used in this case so that both operations of assigning ward 
+	  and decrementing ward capacity are performed one after the other to maintain database consistency.
+
+	  If a ward is required, and no preferred wards are available, Patient is not checked-in into the hospital and no records are created.
+	  If a ward is not required during check-in. Patient can be checked in directly by creating medical record with patient id and check-in date
+
+	 */
+	
 	public void checkInPatient(Connection conn) {
 		System.out.println("Enter the Patient ID who needs to be checked_In");
 		int p_id = sc.nextInt();
@@ -78,6 +93,9 @@ public class MedicalRecord {
 		}
 	}
 
+	/* getLatestMedicalRecordFromPatientId() is a Utility API function, which returns the current medical record for patient given his/her patient ID. 
+	 This is used by many other Reporting, Tasks and Operations API's.
+	*/
 	public int getLatestMedicalRecordFromPatientId(int p_id,Connection conn) {
 		try {
 				PreparedStatement stmt=conn.prepareStatement("Select mr_id from medical_records where patient_id = ? and checkout_date is null");
@@ -96,6 +114,11 @@ public class MedicalRecord {
 		return -1;
 		
 	}
+	
+	/*
+	 * UpdateMedicalRecord(), helps in updating the medical records with prescription, diagnosis and responsible doctor information. 
+	 * Checkout is handled in Patient Class checkoutPatient method
+	 */
 	public void updateMedicalRecord(Connection conn) {
 		// TODO Auto-generated method stub
 		System.out.println("Enter Patient Id whose record needs to be updated");
@@ -158,6 +181,11 @@ public class MedicalRecord {
 		}		
 	}
 
+	/*
+	 * viewMedicalRecordForPatient is used to view details of current medical record (mr_id, doc_id, prescription, diagnosis, ward_id, checkin_date) 
+	 * for given patient Id if he is in hospital. View Medical History is covered in Patient class
+	 */
+	
 	public void viewMedicalRecordForPatient(Connection conn) {
 		System.out.println("Enter Patient Id whose current medical record you want to see");
 		int p_id = sc.nextInt();
