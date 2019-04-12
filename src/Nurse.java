@@ -197,10 +197,10 @@ public class Nurse {
 				System.out.println("Nurses Information not found");
 			}
 			else {
-				System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \n");
+				System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \t\t Role-Type \n");
 				do {
 					System.out.println(rs.getString(2) + "\t\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) + 
-							"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8));
+							"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8) + " \t\t Nurse" );
 				} while (rs.next());
 			}
 		}catch (Exception e) {

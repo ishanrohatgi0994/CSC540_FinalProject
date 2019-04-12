@@ -11,7 +11,7 @@ public class Main {
         if(conn!=null) {
         	//System.out.println("Write switch case here");
         	Menu menu = new Menu();
-        	menu.displayOptions(conn);
+        	menu.displayOptions(conn); //Used to display all the task and operations that a user can perform.  
         	conn.close();
         }
 

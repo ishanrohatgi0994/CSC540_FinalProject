@@ -265,7 +265,7 @@ public class Operator {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select * from operator");
 			ResultSet rs = stmt.executeQuery();
-			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \t\t Type\n");
+			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \t\t Role-Type\n");
 			while(rs.next()) {
 				System.out.println(rs.getString(2) + "\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) + 
 								"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8)+ "\t Operator");
@@ -282,7 +282,7 @@ public class Operator {
 			PreparedStatement stmt=conn.prepareStatement("Select * from operator where oper_id = ?");
 			stmt.setInt(1, o_id);
 			ResultSet rs = stmt.executeQuery();
-			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \t\t Type\n");
+			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t JobTitle \t\t Address \t\t Role-Type\n");
 			while(rs.next()) {
 				System.out.println(rs.getString(2) + "\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) + 
 								"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8)+ "\t Operator");
