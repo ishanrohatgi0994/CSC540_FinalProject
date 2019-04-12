@@ -59,7 +59,7 @@ public class Nurse {
         name = Utils.readAttribute("name", "Nurse", false);
         
         //Get age of the Nurse.
-        String ageString = Utils.readAttribute("age", "Patient", true);
+        String ageString = Utils.readAttribute("age", "Nurse", true);
         if(ageString.equals("")){
             age = null;
         }else {
@@ -67,7 +67,7 @@ public class Nurse {
         }
         
         //Get Gender of Nurse.
-        gender = Utils.readAttribute("Gender", "Patient", true);
+        gender = Utils.readAttribute("Gender", "Nurse", true);
         if(gender.equals("")){
             gender = null;
         }
@@ -133,7 +133,7 @@ public class Nurse {
         for (String attribute: attributes) {
             System.out.println("Should "+ attribute+" be updated? (y/n)");
             if (br.readLine().equals("y")) {
-                String val = Utils.readAttribute(attribute, "Patient", false);
+                String val = Utils.readAttribute(attribute, "Nurse", false);
                 if(attribute.equals("ssn") || attribute.equals("phone")) {
                     UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ",";
                 }
@@ -153,7 +153,6 @@ public class Nurse {
         
         try {
         	Statement stmt = conn.createStatement();
-        	System.out.println(UpdateQuery);
             stmt.executeUpdate(UpdateQuery);
             System.out.println("Successfully updated nurse record");
 		}catch (Exception e) {

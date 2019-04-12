@@ -1,8 +1,12 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.Scanner;
 
 public class Operator {
@@ -114,31 +118,55 @@ public class Operator {
 	// Check which functionalities to implement in this class in Project Report 3
 	// Option 17: View Reports will show menu with the list of reports that can be generated
 	
-	// Harsh Implement
 	// Add Operator, UPDATE Operator, Delete Operator 
-	public void addOperator(Connection conn) {
+	public void addOperator(Connection conn) throws Exception {
 		// Fetching Details to create new Operator
 		
-		System.out.println("Enter Operator name");
-		String name = sc.nextLine();
-		System.out.println("Enter Operator Age");
-		int age = sc.nextInt();
-		System.out.println("Enter Operator Gender : M/F");
-		String gender = sc.next();
-		System.out.println("Enter Operator Phone");
-		BigInteger phone = sc.nextBigInteger();
-		System.out.println("Enter Operator's Department");
-		sc.nextLine();
-		String dept = sc.nextLine();
-		System.out.println("Enter Operator job_title");
-		String title = sc.nextLine();
-		System.out.println("Enter Operator Address");
-		String address = sc.nextLine();
+		String name, address, title, dept, gender;
+		BigInteger phone;
+		Integer age;
+
+		// Interactively read each attributes
+		name = Utils.readAttribute("name", "Operator", false);
+
+		String ageString = Utils.readAttribute("age", "Operator", true);
+		if(ageString.equals("")){
+			age = null;
+		}else {
+			age = Integer.parseInt(ageString);
+		}
+
+		gender = Utils.readAttribute("gender", "Operator", true);
+		if(gender.equals("")) {
+			gender = null;
+		}
+
+		phone = new BigInteger(Utils.readAttribute("phone number", "Operator", false));
+
+		dept = Utils.readAttribute("department", "Operator", true);
+		if(dept.equals("")) {
+			dept = null;
+		}
+
+		title = Utils.readAttribute("professional title", "Operator", true);
+		if(title.equals("")){
+			title = null;
+		}
+
+		address = Utils.readAttribute("address", "Operator", true);
+		if(address.equals("")) {
+			address = null;
+		}
+
 		try {
 			PreparedStatement stmt=conn.prepareStatement("INSERT INTO operator (name,age,gender,phone,department,job_title,address)"+
 														"VALUES (?,?,?,?,?,?,?)");
 			stmt.setString(1, name);
-			stmt.setInt(2, age);
+			if(age != null) {
+                stmt.setInt(2, age);
+            } else {
+                stmt.setNull(2, Types.INTEGER);
+            }
 			stmt.setString(3, gender);
 			stmt.setBigDecimal(4, new BigDecimal(phone));
 			stmt.setString(5, dept);
@@ -154,91 +182,44 @@ public class Operator {
 		
 	}
 	
-	public void updateOperator(Connection conn) {
-		System.out.println("Enter Operator name whose details needs to be updated");
-		String name = sc.nextLine();
+	public void updateOperator(Connection conn) throws Exception {
+		String name = Utils.readAttribute("name", "Operator", false);
 		System.out.println("Enter the phone number");
-		BigInteger phone = sc.nextBigInteger();
+		BigInteger phone = new BigInteger(Utils.readAttribute("phone number", "Operator", false));
 		
-		try {
-			PreparedStatement stmt=conn.prepareStatement("Select * from operator where name =? and phone =?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			stmt.setString(1, name);
-			stmt.setBigDecimal(2, new BigDecimal(phone));
-			ResultSet rs = stmt.executeQuery(); 
-			String ch;
-			
-			if (!rs.next()) {
-				System.out.println("Operator not found");
-			}
-			else {
-				do {
-					//System.out.println(rs.getString("name"));
-					System.out.println("Do you want to update name (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new name");
-						sc.nextLine();
-						String new_name = sc.nextLine();
-						rs.updateString("name", new_name);
-						System.out.println("Update Operator name successful");
-					}
-					System.out.println("Do you want to update age (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new age");
-						int new_age = sc.nextInt();
-						rs.updateInt("age", new_age);
-						System.out.println("Update Operator age successful");
-					}
-					System.out.println("Do you want to update gender (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter Gender");
-						String new_gender = sc.next();
-						rs.updateString("gender", new_gender);
-						System.out.println("Update Operator gender successful");
-					}
-					System.out.println("Do you want to update phone (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new phone number");
-						BigInteger new_phone = sc.nextBigInteger();
-						rs.updateBigDecimal("phone", new BigDecimal(new_phone));
-						System.out.println("Update Operator phone successful");
-					}
-					System.out.println("Do you want to department name (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new department");
-						sc.nextLine();
-						String new_department = sc.nextLine();
-						rs.updateString("department", new_department);
-						System.out.println("Update Operator department successful");
-					}
-					System.out.println("Do you want to update job_title (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new job title");
-						sc.nextLine();
-						String new_job_title = sc.nextLine();
-						rs.updateString("job_title", new_job_title);
-						System.out.println("Update Operator Job Title successful");
-					}
-					System.out.println("Do you want to update address (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new address");
-						sc.nextLine();
-						String new_address = sc.nextLine();
-						rs.updateString("address", new_address);
-						System.out.println("Update Operator address successful");
-					}
-					rs.updateRow();	
-				} while (rs.next());
-				System.out.println ("Updated, Thankyou!!");
-			}
+        String UpdateQuery = "UPDATE operator SET ";
+        String[] attributes = {"name", "age", "gender", "phone", "department", "job_title", "address"};
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        // Build the update query interactively
+        for (String attribute: attributes) {
+            System.out.println("Should "+ attribute+" be updated? (y/n)");
+            if (br.readLine().equals("y")) {
+                String val = Utils.readAttribute(attribute, "Operator", false);
+                if(attribute.equals("ssn") || attribute.equals("phone")) {
+                    UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ",";
+                }
+                else if (attribute.equals("age")) {
+                    UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
+                }
+                else {
+                    UpdateQuery = UpdateQuery + attribute + "='" + val+"',";
+                }
+            }
+        }
+        if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
+        	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
+        }
+        
+        UpdateQuery = UpdateQuery + " WHERE name='"+name+ "' and phone= " + phone;			
+        
+        try {
+        	Statement stmt = conn.createStatement();
+        	System.out.println(UpdateQuery);
+            System.out.println("Successfully updated operator record");
 		}catch (Exception e) {
-			System.out.println("Update Operator Record unsuccessful");
+				System.out.println(e.getMessage());
+				System.out.println("Update operator Record unsuccessful");
 		}
 	}
 	
@@ -275,6 +256,7 @@ public class Operator {
 			System.out.println("Error in viewing operators");
 		}
 	}
+	
 	public void viewOperator(Connection conn) {
 		System.out.println("Enter Operator ID");
 		int o_id = sc.nextInt();

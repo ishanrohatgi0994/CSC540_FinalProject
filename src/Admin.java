@@ -30,8 +30,13 @@ public class Admin {
 				}
 				break;
 			case 3:
-				op.addOperator(conn);
-				break;
+				try {
+					op.addOperator(conn);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					break;
 			case 4:
 				try{
 					Ward.addWard(conn);
@@ -40,8 +45,13 @@ public class Admin {
 				}
 				break;
 			case 6:
-				op.updateOperator(conn);
-				break;
+				try {
+					op.updateOperator(conn);
+				} catch (Exception e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+					break;
 			case 7:
 				try {
 					nurse.updateNurse(conn);
