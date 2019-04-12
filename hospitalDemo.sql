@@ -342,3 +342,9 @@ values ('Carol', 55, 'F', 911, 'ER', null, '351 MH St , Greensboro NC 27', 1),
 	
 insert into ward(total_capacity, current_availability, ward_type, nurse_id)
 values (4, 4, 4, 1), (4, 4, 4, 1), (2, 2, 2, 2), (2, 2, 2, 2);
+
+insert into medical_records(diagnosis, prescription, checkin_date, checkout_date, patient_id, ward_id, doc_id)
+values ('Hospitalization', 'nervine', 2019-03-01, null, 1, 1, 1),
+('Hospitalization', 'nervine', 2019-03-10, null, 2, 2, 1),
+('Hospitalization', 'nervine', 2019-03-15, null, 3, 1, 1),
+('Surgeon, Hospitalization', 'analgesic', 2019-03-17, 2019-03-21, 4, 3, 2);
