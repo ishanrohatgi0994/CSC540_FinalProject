@@ -115,7 +115,6 @@ public class Ward {
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to insert ward");
-			e.printStackTrace();
 		}
 
 	}
@@ -215,7 +214,7 @@ public class Ward {
 			System.out.println("Successfully updated ward record");
 		} catch(SQLException e) {
 			System.out.println("Error while updating ward record");
-			System.out.println(e);
+			//System.out.println(e);
 		}
 	}
 
@@ -283,7 +282,7 @@ public class Ward {
 			return ward_return;
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error Occured while fetching wards. Try Later");
 		}
 		return -1;
@@ -318,7 +317,7 @@ public class Ward {
 				System.out.println("Change Date Range (Enter in Format Given) and Try again");
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error occured while fetching Ward Usage Report for this date range");
 		}
 	}

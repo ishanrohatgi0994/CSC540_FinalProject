@@ -150,7 +150,7 @@ public class Patient {
                 System.out.println();
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             System.out.println("Error fetching details of patients "+ids);
         }
     }
@@ -256,7 +256,7 @@ public class Patient {
             }
         } catch (SQLException e) {
             System.out.println("Failed to insert patient");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -450,7 +450,7 @@ public class Patient {
         } catch (SQLException e) {
             conn.rollback();
             System.out.println("Error assigning ward to the patient "+patientID);
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         conn.setAutoCommit(true);
     }
@@ -476,7 +476,7 @@ public class Patient {
             }
         } catch (SQLException e) {
             System.out.println("Error while getting recent medical record for the patient "+ patientID);
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
         return -1;
     }
@@ -535,7 +535,7 @@ public class Patient {
             System.out.println("-----");
         } catch(SQLException e) {
             System.out.println("Error getting medical record summary history ");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -577,7 +577,7 @@ public class Patient {
             System.out.println("Successfully checked out the patient");
         } catch (SQLException e) {
             System.out.println("Error checking out the patient");
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             conn.rollback();
         }
         conn.setAutoCommit(true);
@@ -765,7 +765,7 @@ public class Patient {
         } catch (SQLException e) {
             // Error during execution of the payment
             System.out.println("Error processing payment");
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             // Roll back the transaction.
             conn.rollback();
         }

@@ -21,7 +21,7 @@ public class Treatment {
 		System.out.println("Enter the treatment type number");
 		int medicalRecordId=-1, treatmentNumber;
 		String treatmentType="";
-		
+		boolean flag = true;
 		try {
 			PreparedStatement stmt1 = conn.prepareStatement("select treatment_type from treatment_cost;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs1 = stmt1.executeQuery();
@@ -39,9 +39,10 @@ public class Treatment {
 		}
 		catch(Exception e) {
 			System.out.println("Error occured while fetching the treatment types");
-			System.exit(0);
+			flag = false;
 		}
 		// Fetch medical record for a given Patient in order to add treatment for that medical record.
+		if(flag) {
 		try {
 			PreparedStatement stmt = conn.prepareStatement("select mr_id from medical_records where patient_id = ? "
 					+ " and checkout_date is null", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE );
@@ -52,9 +53,11 @@ public class Treatment {
 		}
 		catch (Exception e){
 			System.out.println("The given Patient ID is not undergoing any treatment");
-			System.exit(0);
+			flag = false;
+		}
 		}
 		//Insert the treatment details of the patient to the Treatment table.
+		if(flag) {
 		try {
 			PreparedStatement stmt2 = conn.prepareStatement("insert into treatment(mr_id, doc_id,treatment_type) "+
 			"values(?,?,?)");
@@ -67,6 +70,7 @@ public class Treatment {
 		catch(Exception e){
 			System.out.println("Unable to add treatment details");
 		}
+		}
 	}
 	
 	//View Current Treatment Details for a Patient
@@ -75,6 +79,7 @@ public class Treatment {
 			System.out.println("Enter Patient ID");
 			int patientId = sc.nextInt();
 			int medicalRecordId = -1;
+			boolean flag = true;
 			//Get current Medical Record in order to view the treatment details.
 			try {
 				PreparedStatement stmt = conn.prepareStatement("select * from medical_records where patient_id = ? "
@@ -86,9 +91,11 @@ public class Treatment {
 			}
 			catch(Exception e) {
 				System.out.println("Given Patient is not undergoing any treatment");
-				System.exit(0);
+				flag = false;
+				//System.exit(0);
 			}
 			//Get all treatment details associated with given patient's current medical record. 
+			if(flag) {
 			try {				
 				PreparedStatement stmt2 = conn.prepareStatement("select * from treatment where mr_id = ? ");
 				stmt2.setInt(1, medicalRecordId);
@@ -107,6 +114,7 @@ public class Treatment {
 			catch (Exception e){
 				System.out.println("Unable to fetch treatment details for given patient id");
 			}
+			}
 	}
 	
 	//Update Treatment for a given patient
@@ -115,6 +123,7 @@ public class Treatment {
 		System.out.println("Enter Patient ID who's treatment details has to be deleted");
 		int patientId = sc.nextInt();
 		int medicalRecordId = -1;
+		boolean flag = true;
 		//Get current Medical Records for Patient.
 		try {
 			PreparedStatement stmt = conn.prepareStatement("select * from medical_records where patient_id = ? "
@@ -126,9 +135,11 @@ public class Treatment {
 		}
 		catch(Exception e) {
 			System.out.println("Given Patient is not undergoing any treatment");
-			System.exit(0);
+			flag = false;
+			//System.exit(0);
 		}
 		//Get Treatments associated with the corresponding Patient's current medical record.
+		if(flag) {
 		try {				
 			PreparedStatement stmt2 = conn.prepareStatement("select * from treatment where mr_id = ? ");
 			stmt2.setInt(1, medicalRecordId);
@@ -146,8 +157,11 @@ public class Treatment {
 		}
 		catch (Exception e){
 			System.out.println("Unable to fetch treatment details for given patient id");
+			flag = false;
+		}
 		}
 		//Get Possible Treatment Details
+		if(flag) {
 		System.out.println("Please Enter one of the Treatment IDs from above list");
 		int treatmentId = sc.nextInt();
 		//Get the treatment details that need to be updated from the user.
@@ -202,8 +216,9 @@ public class Treatment {
 			}
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Treatment Details could not be updated");
+		}
 		}
 	}
 
@@ -213,6 +228,7 @@ public class Treatment {
 		System.out.println("Enter Patient ID who's treatment details has to be deleted");
 		int patientId = sc.nextInt();
 		int medicalRecordId = -1;
+		boolean flag = true;
 		//Get current medical record for the entered Patient.
 		try {
 			PreparedStatement stmt = conn.prepareStatement("select * from medical_records where patient_id = ? "
@@ -224,10 +240,12 @@ public class Treatment {
 		}
 		catch(Exception e) {
 			System.out.println("Given Patient is not undergoing any treatment");
-			System.exit(0);
+			flag = false;
+			//System.exit(0);
 		}
 		//Display all the treatments that a patient is currently undergoing.
 		//User will mention the treatment details that has to be deleted.
+		if(flag) {
 		try {				
 			PreparedStatement stmt2 = conn.prepareStatement("select * from treatment where mr_id = ? ");
 			stmt2.setInt(1, medicalRecordId);
@@ -246,6 +264,7 @@ public class Treatment {
 		catch (Exception e){
 			System.out.println("Unable to fetch treatment details for given patient id");
 		}
+		}
 		//Perform deletion of the treatment details.
 		System.out.println("Enter the Treatment ID which has to be deleted from the above list");
 		int treatmentId = sc.nextInt();
@@ -255,7 +274,7 @@ public class Treatment {
 			stmt3.executeUpdate();
 			System.out.println("Treatment Details deleted");
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error in deletion of treatment details");
 		}
 	}

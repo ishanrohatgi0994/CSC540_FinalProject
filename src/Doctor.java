@@ -30,7 +30,8 @@ public class Doctor {
 				try{
 					Patient.viewMedicalHistory(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
+					System.out.println("Error while viewing medical history");
 				}
 				break;
 			case 5: 
@@ -123,7 +124,6 @@ public class Doctor {
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to insert doctor");
-			e.printStackTrace();
 		}
 
 	}
@@ -169,7 +169,7 @@ public class Doctor {
 			System.out.println("Successfully updated doctor record");
 		} catch(SQLException e) {
 			System.out.println("Error while updating doctor record");
-			System.out.println(e);
+			//System.out.println(e);
 		}
 	}
 
@@ -202,7 +202,7 @@ public class Doctor {
 						"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8) + "\t\t"+rs.getInt(9) + " \t\t Doctor");
 			}
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error in viewing Doctors");
 		}
 	}
@@ -226,7 +226,7 @@ public class Doctor {
 						"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8) + "\t\t"+rs.getInt(9) + " \t\t Doctor");
 			}
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error in viewing Doctors");
 		}
 	}

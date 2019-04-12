@@ -33,7 +33,8 @@ public class Nurse {
 		case 3: try {
 			Ward.viewWardInformationForNurse(conn);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Error while fetching ward information for nurse");
+			//e.printStackTrace();
 		}
 		break;
 		case 4: treatment.viewCurrentTreatmentDetails(conn);
@@ -156,7 +157,7 @@ public class Nurse {
             stmt.executeUpdate(UpdateQuery);
             System.out.println("Successfully updated nurse record");
 		}catch (Exception e) {
-				System.out.println(e.getMessage());
+				// System.out.println(e.getMessage());
 				System.out.println("Update Nurse Record unsuccessful");
 		}
 	}
@@ -181,7 +182,7 @@ public class Nurse {
 			System.out.println("Deleted Nurse successful");
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Deletion of Nurse unsuccessful");
 		}
 	}
