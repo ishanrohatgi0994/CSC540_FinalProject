@@ -48,7 +48,6 @@ public class Ward {
 
 	}
 
-	//Ishan Implementation
 	// Add Ward
 	public static void addWard(Connection conn) throws IOException {
 		// initialize required attributes
@@ -237,6 +236,10 @@ public class Ward {
 		}
 	}
 	
+	/*
+	 * getCurrentWardUsageStatus()is a report used to view current availability and total capacity and percentage usage for all wards of all types.
+	 * It is useful for Hospital Staff to check number of patients in hospital and also total available beds.
+	 */
 	public static void getCurrentWardUsageStatus(Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, total_capacity, current_availability FROM Ward");
@@ -253,6 +256,10 @@ public class Ward {
 		}
 	}
 	
+	/*
+	 * getWardAvailaibilityByWardType() is used to display all wards available for the given ward type and return the first available ward. 
+	 * This information is useful for check-in(operator) staff to check ward availability based on patient preference.
+	 */
 	public static int getWardAvailaibilityByWardType(int ward_type, Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, current_availability FROM Ward where ward_type = ? and current_availability > 0");
@@ -281,6 +288,10 @@ public class Ward {
 		}
 		return -1;
 	}
+	
+	/*
+	 * getWardUsageHistory() is a report used to view ward usage(total patients admitted in that ward) report for the given Ward Id and given date range
+	 */
 	public static void getWardUsageHistory(Connection conn) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter ward id");
@@ -312,6 +323,9 @@ public class Ward {
 		}
 	}
 
+	/*
+	 * decrementWardCapacity() is used to decrement ward capacity once it is assigned to a patient during check-in
+	 */
 	public static void decrementWardCapacity(int ward_id, Connection conn){
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select ward_id, current_availability from WARD where ward_id = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);

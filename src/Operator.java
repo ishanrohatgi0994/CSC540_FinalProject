@@ -115,10 +115,10 @@ public class Operator {
 				System.out.println("Invalid Input");
 		}
 	}
-	// Check which functionalities to implement in this class in Project Report 3
 	// Option 17: View Reports will show menu with the list of reports that can be generated
 	
-	// Add Operator, UPDATE Operator, Delete Operator 
+	// Add Operator - Inserts a new Operator with attributes like (Name,Age,Gender,Phone,Department, Job_title, Address)to Database.
+	
 	public void addOperator(Connection conn) throws Exception {
 		// Fetching Details to create new Operator
 		
@@ -182,6 +182,11 @@ public class Operator {
 		
 	}
 	
+	/* UPDATE Operator - 
+		Takes the name and phone number of the operator which needs to be updated (as they uniquely determine all other attributes. 
+		Operator Id can also be used)and updates the attribute by asking for corresponding new input values for attributes 
+		(Name, Age,Gender,Phone,Department, Job-Title and address) that needs to be updated.
+	*/
 	public void updateOperator(Connection conn) throws Exception {
 		String name = Utils.readAttribute("name", "Operator", false);
 		System.out.println("Enter the phone number");
@@ -223,6 +228,9 @@ public class Operator {
 		}
 	}
 	
+	/*  Delete Operator - takes the name and phone number of the operator that needs to be deleted(as they uniquely determine all other attributes. 
+		Operator Id can also be used)and deletes the corresponding entry of Operator from Database */
+	
 	public void deleteOperator(Connection conn) {
 		System.out.println("Enter Operator name who needs to be deleted");
 		String name = sc.nextLine();
@@ -242,6 +250,7 @@ public class Operator {
 		}
 	}
 
+	// ViewAllOperators() is used to view information of All Operator Staff members that are currently stored in Database
 	public void viewAllOperators(Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select * from operator");
@@ -257,6 +266,8 @@ public class Operator {
 		}
 	}
 	
+	// viewOperator() is used to fetch details of individual operators by entering their Operator Id as input.
+	// (Can be fetched by getting name and phone number as input too)
 	public void viewOperator(Connection conn) {
 		System.out.println("Enter Operator ID");
 		int o_id = sc.nextInt();
