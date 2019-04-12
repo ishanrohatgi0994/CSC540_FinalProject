@@ -320,6 +320,15 @@ UNLOCK TABLES;
 -- Dump completed on 2019-04-10 11:38:36
 # Insert statements:
 
+# Ward Charges:
+INSERT INTO ward_charges
+(ward_type,charges)
+VALUES
+(1,50),
+(2,50),
+(3,100),
+(4,100);
+
 #1) Doctor:
 INSERT INTO doctor
 (name,age,gender,phone,dept,professional_title,address,status)
