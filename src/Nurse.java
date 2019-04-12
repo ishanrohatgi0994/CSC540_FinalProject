@@ -1,8 +1,12 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.Scanner;
 
 public class Nurse {
@@ -17,7 +21,8 @@ public class Nurse {
 				"2) Enter Treatment (Test) Details \n " +
 				"3) View Managed Ward Information \n " +
 				"4) View Treatment Details \n " +
-				"5) View Medical Record for Patient \n");
+				"5) View Medical Record for Patient \n" +
+				"6) Delete Treatment Details of a Patient");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1: mr.updateMedicalRecord(conn);
@@ -34,38 +39,62 @@ public class Nurse {
 				break;
 		case 5: mr.viewMedicalRecordForPatient(conn);
 				break;
+		case 6: treatment.deleteTreatment(conn);
+				break;
 		default: 
 			System.out.println("Enter valid Input");
 		}
 	}
-	// Add Nurse
 	
-	public void addNurse(Connection conn) {
+	//Add Nurse
+	public void addNurse(Connection conn) throws Exception{
 		// Fetching Details to create new Nurse
 		
-		System.out.println("Enter Nurse name");
-		String name = sc.nextLine();
-		System.out.println("Enter Nurse Age");
-		int age = sc.nextInt();
-		System.out.println("Enter Nurse Gender : M/F");
-		String gender = sc.next();
-		System.out.println("Enter Nurse Phone");
-		BigInteger phone = sc.nextBigInteger();
-		System.out.println("Enter Nurse's Department");
-		sc.nextLine();
-		String dept = sc.nextLine();
-		System.out.println("Enter Nurse job_title");
-		String title = sc.nextLine();
-		System.out.println("Enter Nurse Address");
-		String address = sc.nextLine();
-		System.out.println("Enter Nurse Status (Either 0 or 1)");
-		int status = sc.nextInt();
+		String name, address, gender, dept;
+        BigInteger phone;
+        Integer age;
+
+        // Interactively read each attributes
+        // read name of the patient
+        name = Utils.readAttribute("name", "Nurse", false);
+        
+        // read age of the patient
+        String ageString = Utils.readAttribute("age", "Patient", true);
+        if(ageString.equals("")){
+            age = null;
+        }else {
+            age = Integer.parseInt(ageString);
+        }
+        
+        gender = Utils.readAttribute("Gender", "Patient", true);
+        if(gender.equals("")){
+            gender = null;
+        }
+        
+        phone = new BigInteger(Utils.readAttribute("phone number", "Nurse", false));
+
+        dept = Utils.readAttribute("department", "Nurse", true);
+        address = Utils.readAttribute("address", "Nurse", true);
+        
+        if(address.equals("")) {
+            address = null;
+        }        
+        
+        String title = Utils.readAttribute("professional title", "Nurse", true);
+        if(title.equals("")){
+            title = null;
+        }
+		int status = 1;
 		
 		try {
 			PreparedStatement stmt=conn.prepareStatement("INSERT INTO Nurse (name,age,gender,phone,dept,professional_title,address,status)"+
 														"VALUES (?,?,?,?,?,?,?,?)");
 			stmt.setString(1, name);
-			stmt.setInt(2, age);
+			if(age != null) {
+                stmt.setInt(2, age);
+            } else {
+                stmt.setNull(2, Types.INTEGER);
+            }
 			stmt.setString(3, gender);
 			stmt.setBigDecimal(4, new BigDecimal(phone));
 			stmt.setString(5, dept);
@@ -77,105 +106,55 @@ public class Nurse {
 			System.out.println("Nurse Insertion Successful");
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
 			System.out.println("Nurse Creation Failed");
 		}
 	}
 	
 	//Update Nurse
-	public void updateNurse(Connection conn) {
-		System.out.println("Enter Nurse name whose details needs to be updated");
-		String name = sc.nextLine();
+	public void updateNurse(Connection conn) throws Exception {
+		String name = Utils.readAttribute("name", "Nurse", false);
 		System.out.println("Enter the phone number");
-		BigInteger phone = sc.nextBigInteger();
+		BigInteger phone = new BigInteger(Utils.readAttribute("phone number", "Nurse", false));
 		
-		try {
-			PreparedStatement stmt=conn.prepareStatement("Select * from Nurse where name =? and phone =?",
-					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			stmt.setString(1, name);
-			stmt.setBigDecimal(2, new BigDecimal(phone));
-			ResultSet rs = stmt.executeQuery(); 
-			String ch;
-			
-			if (!rs.next()) {
-				System.out.print("Nurse not Found");
-			}
-			else {
-				do {
-					System.out.println("Do you want to update name (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new name");
-						sc.nextLine();
-						String new_name = sc.nextLine();
-						rs.updateString("name", new_name);
-					}
-					System.out.println("Do you want to update age (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new age");
-						sc.nextLine();
-						int new_age = sc.nextInt();
-						rs.updateInt("age", new_age);
-					}
-					System.out.println("Do you want to update gender (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter Gender");
-						sc.nextLine();
-						String new_gender = sc.next();
-						rs.updateString("gender", new_gender);
-					}
-					System.out.println("Do you want to update phone (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new phone number");
-						sc.nextLine();
-						BigInteger new_phone = sc.nextBigInteger();
-						rs.updateBigDecimal("phone", new BigDecimal(new_phone));
-					}
-					System.out.println("Do you want to department name (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new department");
-						sc.nextLine();
-						String new_department = sc.nextLine();
-						rs.updateString("dept", new_department);
-					}
-					System.out.println("Do you want to update professional title (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new professional title");
-						sc.nextLine();
-						String new_job_title = sc.nextLine();
-						rs.updateString("professional_title", new_job_title);
-					}
-					System.out.println("Do you want to update address (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new address");
-						sc.nextLine();
-						String new_address = sc.nextLine();
-						rs.updateString("address", new_address);
-					}
-					System.out.println("Do you want to update status (Y/N) ?");
-					ch = sc.next();
-					if(ch.equals("Y") || ch.equals("y")) {
-						System.out.println("Enter new address");
-						sc.nextLine();
-						int status = sc.nextInt();
-						rs.updateInt("status", status);
-					}
-				rs.updateRow();	
-				} while (rs.next());
-				System.out.println("Updated Nurse successful");
-			}			
+        String UpdateQuery = "UPDATE nurse SET ";
+        String[] attributes = {"name", "age", "gender", "phone", "dept", "professional_title", "address"};
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        // Build the update query interactively
+        for (String attribute: attributes) {
+            System.out.println("Should "+ attribute+" be updated? (y/n)");
+            if (br.readLine().equals("y")) {
+                String val = Utils.readAttribute(attribute, "Patient", false);
+                if(attribute.equals("ssn") || attribute.equals("phone")) {
+                    UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ",";
+                }
+                else if (attribute.equals("age")) {
+                    UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
+                }
+                else {
+                    UpdateQuery = UpdateQuery + attribute + "='" + val+"',";
+                }
+            }
+        }
+        if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
+        	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
+        }
+        
+        UpdateQuery = UpdateQuery + " WHERE name='"+name+ "' and phone= " + phone;			
+        
+        try {
+        	Statement stmt = conn.createStatement();
+        	System.out.println(UpdateQuery);
+            stmt.executeUpdate(UpdateQuery);
+            System.out.println("Successfully updated nurse record");
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println("Update Nurse Record unsuccessful");
+				System.out.println(e.getMessage());
+				System.out.println("Update Nurse Record unsuccessful");
 		}
 	}
 	
+	//Delete Nurse
+
 	//Delete Nurse
 	public void deleteNurse(Connection conn) {
 		System.out.println("Enter Nurse name who needs to be deleted");
@@ -184,9 +163,10 @@ public class Nurse {
 		BigInteger phone = sc.nextBigInteger();
 		
 		try {
-			PreparedStatement stmt=conn.prepareStatement("Delete from nurse where name =? and phone =?");
-			stmt.setString(1, name);
-			stmt.setBigDecimal(2, new BigDecimal(phone));
+			PreparedStatement stmt=conn.prepareStatement("update nurse set status = ? where name =? and phone =?");
+			stmt.setInt(1, 0);
+			stmt.setString(2, name);
+			stmt.setBigDecimal(3, new BigDecimal(phone));
 			stmt.executeUpdate(); // Will delete if nurse exists else no side effects
 			System.out.println("Deleted Nurse successful");
 		}
@@ -197,6 +177,8 @@ public class Nurse {
 	}
 
 	//View all Nurses
+
+	//View all nurses
 	public void viewAllNurses(Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select * from Nurse");

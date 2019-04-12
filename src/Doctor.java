@@ -142,21 +142,26 @@ public class Doctor {
 			if (br.readLine().equals("y")) {
 				String val = Utils.readAttribute(attribute, "Doctor", false);
 				if(attribute.equals("phone")) {
-					UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ", ";
+					UpdateQuery = UpdateQuery + attribute + "="+ new BigInteger(val) + ",";
 				}
 				else if (attribute.equals("age")) {
-					UpdateQuery = UpdateQuery + attribute + "=" + val + ", ";
+					UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
 				}
 				else if (attribute.equals("status")) {
-					UpdateQuery = UpdateQuery + attribute + "=" + val + " ";
+					UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
 				}
 				else {
-					UpdateQuery = UpdateQuery + attribute + "='" + val+"', ";
+					UpdateQuery = UpdateQuery + attribute + "='" + val+"',";
 				}
 			}
 		}
-		UpdateQuery = UpdateQuery + "WHERE doc_id ="+ID;
-		System.out.println(UpdateQuery);
+		
+		if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
+        	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
+        }
+		
+		UpdateQuery = UpdateQuery + " WHERE doc_id ="+ID;
+//		System.out.println(UpdateQuery);
 		//Execute the query
 		try {
 			Statement stmt = conn.createStatement();

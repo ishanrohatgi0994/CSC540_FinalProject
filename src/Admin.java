@@ -23,7 +23,11 @@ public class Admin {
 				}
 				break;
 			case 2: 
-				nurse.addNurse(conn);
+				try {
+					nurse.addNurse(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			case 3:
 				op.addOperator(conn);
@@ -39,7 +43,11 @@ public class Admin {
 				op.updateOperator(conn);
 				break;
 			case 7:
-				nurse.updateNurse(conn);
+				try {
+					nurse.updateNurse(conn);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 				break;
 			case 8:
 				try {
