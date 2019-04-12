@@ -13,7 +13,8 @@ class establishConnection{
     	}
     	catch(Exception e)
     	{
-    		System.out.println(e.getMessage());
+    		//System.out.println(e.getMessage());
+    		System.out.println("Error in establishing connection");
     	}
 		return null;  
     }  
