@@ -244,9 +244,9 @@ public class Ward {
 			System.out.println("---------------------------------------------------");
 			System.out.println("Current Ward usage status:");
 			System.out.println("---------------------------------------------------");
-			System.out.println("Ward_Id \t Total Capacity \t Current Avilability");
+			System.out.println("Ward_Id \t Total Capacity \t Current Avilability \t Percent Usage");
 			while(rs.next()) {
-				System.out.println(rs.getInt(1) + "\t \t " + rs.getInt(2) + "\t \t \t" + rs.getInt(3));
+				System.out.println(rs.getInt(1) + "\t \t " + rs.getInt(2) + "\t \t \t" + rs.getInt(3) + "\t \t \t" + (((rs.getInt(2)-rs.getInt(3))*100)/rs.getInt(2)) + "%");
 			}
 		}catch(Exception e) {
 			System.out.println("Error occured while fetching ward usage");
