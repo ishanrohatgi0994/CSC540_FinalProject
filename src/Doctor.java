@@ -16,13 +16,16 @@ public class Doctor {
 	public static int STATUS_WORKING = 1;
 
 	Treatment treatment = new Treatment();
-	
+	MedicalRecord mr = new MedicalRecord();
 	public void displayDoctorOptions(Connection conn) {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
 				+ "\n 3) View Current Treatment Details \n 4) Add Treatment"
 				+ "\n 5) Update Treatment"
-				+ "\n 6) Update Medical Record"
-				+ "\n 7) Get List of Patients by Doctor");
+				+ "\n 6) Delete Treatment"
+				+ "\n 7) Update Medical Record"
+				+ "\n 8) Get List of Patients by Doctor"
+				+ "\n 9) View Current Medical Record for a patient"
+				);
 		Scanner sc = new Scanner(System.in);
 
 		int choice = sc.nextInt();
@@ -35,15 +38,33 @@ public class Doctor {
 					System.out.println("Error while viewing medical history");
 				}
 				break;
+			case 2:
+				Ward.viewWardInformationForDoctor(conn);
+				break;
+			case 3:
+				treatment.viewCurrentTreatmentDetails(conn);
+				break;
+			case 4:
+				treatment.addTreatment(conn);
+				break;
 			case 5: 
 				treatment.updateTreatment(conn);
 				break;
+			case 6:
+				treatment.deleteTreatment(conn);
+				break;
 			case 7:
+				mr.updateMedicalRecord(conn);
+				break;
+			case 8:
 				try {
 					getAllPatientsForDoctor(conn);
 				} catch (IOException e) {
 					System.out.println("Doctor not found");
 				}
+				break;
+			case 9:
+				mr.viewMedicalRecordForPatient(conn);
 				break;
 			default:
 				System.out.println("Invalid choice");
