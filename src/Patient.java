@@ -157,7 +157,7 @@ public class Patient {
 
 
     // Read details of a patient interactively and insert to the database.
-    static void addPatient(Connection conn) throws Exception    {
+    static int addPatientIfNotExists(Connection conn) throws Exception    {
         /*
         Input:
             Connection to the database.
@@ -170,11 +170,22 @@ public class Patient {
         // initialize required attributes
         String name, address;
         BigInteger ssn, phone;
-        Integer current_status, age;
+        // Integer current_status, age;
+        Integer age;
 
         // Interactively read each attributes
         // read name of the patient
         name = Utils.readAttribute("name", "Patient", false);
+        // read phone number of the patient
+        phone = new BigInteger(Utils.readAttribute("phone number", "Patient", false));
+        String s = "SELECT patient_id, current_status FROM patient WHERE name = '"+name+"' AND phone ="+phone;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(s);
+        if(rs.next()) {
+        	if(rs.getInt("current_status") == Patient.)
+        	return rs.getInt("patient_id");
+        }
+        // read other attributes
         address = Utils.readAttribute("address", "Patient", true);
         if(address.equals("")) {
             address = null;
@@ -186,8 +197,6 @@ public class Patient {
         }else {
             ssn = new BigInteger(ssnString);
         }
-        // read phone number of the patient
-        phone = new BigInteger(Utils.readAttribute("phone number", "Patient", false));
         // read age of the patient
         String ageString = Utils.readAttribute("age", "Patient", true);
         if(ageString.equals("")){
@@ -195,13 +204,7 @@ public class Patient {
         }else {
             age = Integer.parseInt(ageString);
         }
-        // current status of the patient
-        System.out.println("Enter one of the following for current status: 0 - Not in hospital, 1 - not admitted, 2 - admitted.");
-        current_status = Integer.parseInt(Utils.readAttribute("current status ", "Patient", false));
-        while(current_status != STATUS_ADMITTED && current_status != STATUS_NOT_IN_HOSPITAL && current_status != STATUS_OUTPATIENT) {
-            System.out.println("Invalid status "+current_status+" entered. Try again.");
-            current_status = Integer.parseInt(Utils.readAttribute("current status ", "Patient", false));
-        }
+        
         // gender of the patient
         String gender = Utils.readAttribute("Gender", "Patient", true);
         if(gender.equals("")){

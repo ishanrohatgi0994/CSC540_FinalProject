@@ -26,8 +26,7 @@ public class MedicalRecord {
 	 */
 	
 	public void checkInPatient(Connection conn) {
-		System.out.println("Enter the Patient ID who needs to be checked_In");
-		int p_id = sc.nextInt();
+		int p_id = Patient.addPatient(conn);
 		int ward_id = -1;
 		System.out.println("Ward Required ? (Y/N)");
 		String ch = sc.next();
