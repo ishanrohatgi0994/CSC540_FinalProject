@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -21,7 +22,9 @@ public class Operator {
 				+ "\n 6) Update Ward \n 7) Update Medical Record"
 				+ "\n 8) Delete Nurse \n 9) Delete Doctor \n 10) Delete Patient"
 				+ "\n 11) Delete Ward \n 12) Assign Patient to Ward \n 13) Checkout Patient \n 14) View Patient\n"
-				+" 15) View Reports\n 16) view and pay bill\n 17) Get number of patients for date range\n");
+				+" 15) Ward Usage Status (percent usage) Report \n 16) view and pay bill \n 17) Get number of patients for date range Report\n"
+				+ "18) Medical History for given time range Report \n "
+				+ "19) List of patients currently treated by a  given doctor Report");
 			// Check out patient involves generating Billing too
 		int choice = sc.nextInt();
 		switch (choice){
@@ -118,6 +121,20 @@ public class Operator {
 				} catch (Exception e) {
 					System.out.println("Error while getting patients");
 				}
+				break;
+			case 18:
+			try {
+				Patient.viewMedicalHistory(conn);
+			} catch (Exception e) {
+				System.out.println("Error while medical history for patients");
+			}
+				break;
+			case 19:
+			try {
+				Doctor.getAllPatientsForDoctor(conn);
+			} catch (IOException e) {
+				System.out.println("Error while getting patients");
+			}
 				break;
 			default:
 				System.out.println("Invalid Input");
