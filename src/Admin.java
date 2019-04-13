@@ -94,7 +94,11 @@ public class Admin {
 				}
 				break;
 			case 12:
+			try {
 				Ward.deleteWard(conn);
+			} catch (Exception e2) {
+				System.out.println("Error in ward deletion");
+			}
 				break;
 			case 13:
 				op.viewAllOperators(conn);
