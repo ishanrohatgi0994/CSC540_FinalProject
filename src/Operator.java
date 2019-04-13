@@ -18,13 +18,13 @@ public class Operator {
 		System.out.println("\n"
 				+ "\n 1) Add Patient"
 				+ "\n 2) Add Medical Record(Check -In) for a Patient"
-				+ "\n 3) Update Nurse \n 4) Update Doctor \n 5) Update Patient "
-				+ "\n 6) Update Ward \n 7) Update Medical Record"
-				+ "\n 8) Delete Nurse \n 9) Delete Doctor \n 10) Delete Patient"
-				+ "\n 11) Delete Ward \n 12) Assign Patient to Ward \n 13) Checkout Patient \n 14) View Patient\n"
-				+" 15) Ward Usage Status (percent usage) Report \n 16) view and pay bill \n 17) Get number of patients for date range Report\n"
-				+ "18) Medical History for given time range Report \n "
-				+ "19) List of patients currently treated by a  given doctor Report");
+				+ "\n 3) Update Patient "
+				+ "\n 4) Update Ward \n 5) Update Medical Record"
+				+ "\n 6) Delete Patient"
+				+ "\n 7) Assign/Update Patient to Ward \n 8) Checkout Patient \n 9) View Patient\n"
+				+" 10) Ward Usage Status (percent usage) Report \n 11) view and pay bill \n 12) Get number of patients for date range Report\n"
+				+ "13) Medical History for given time range Report \n "
+				+ "14) List of patients currently treated by a  given doctor Report");
 			// Check out patient involves generating Billing too
 		int choice = sc.nextInt();
 		switch (choice){
@@ -39,97 +39,76 @@ public class Operator {
 			case 2:
 				mr.checkInPatient(conn);
 				break;
-			case 4:
-				try {
-					Doctor.updateDoctor(conn);
-				} catch (Exception e) {
-					System.out.println("Error while updating doctor. Try again");
-				}
-				break;
-			case 5:
+			case 3:
 				try {
 					Patient.updatePatient(conn);
 				} catch (Exception e) {
 					System.out.println("Error while update patient. Try again");
 				}
 				break;
-			case 6:
+			case 4:
 				try {
 					Ward.updateWard(conn);
 				} catch (Exception e) {
 					System.out.println("Error while updating ward");
 				}
 				break;
-			case 7:
+			case 5:
 				mr.updateMedicalRecord(conn);
 				break;
-			case 9:
-				try {
-					Doctor.deleteDoctor(conn);
-				} catch (Exception e) {
-					System.out.println("Error while deleting doctor");
-				}
-				break;
-			case 10:
+			case 6:
 				try {
 					Patient.deletePatient(conn);
 				} catch (Exception e) {
 					System.out.println("Error while deleting patient");
 				}
 				break;
-			case 11:
-				try {
-					Ward.deleteWard(conn);
-				} catch (Exception e) {
-					System.out.println("Error while deleting ward");
-				}
-				break;
-			case 12:
+			case 7:
 				try {
 					Patient.assignOrUpdateWardToPatient(conn);
 				} catch (Exception e) {
 					System.out.println("Error while assigning ward");
 				}
 				break;
-			case 13:
+			case 8:
 				try {
 					Patient.checkoutPatient(conn);
 				} catch (Exception e) {
 					System.out.println("Error while checking out patient");
 				}
 				break;
-			case 14:
+			case 9:
 				try {
 					Patient.viewPatientsByIDs(conn);
 				} catch (Exception e) {
 					System.out.println("Error while viewing Patient information");
 				}
 				break;
-			case 15:
+			case 10:
 				Ward.getCurrentWardUsageStatus(conn);
 				break;
-			case 16:
+			case 11:
 				try {
 					Patient.viewAndPayBill(conn);
 				} catch (Exception e) {
 					System.out.println("Error while generating bill");
 				}
 				break;
-			case 17:
+			case 12:
 				try {
 					MedicalRecord.getPatientPerMonth(conn);
 				} catch (Exception e) {
 					System.out.println("Error while getting patients");
 				}
 				break;
-			case 18:
+			case 13:
 			try {
 				Patient.viewMedicalHistory(conn);
 			} catch (Exception e) {
 				System.out.println("Error while medical history for patients");
 			}
 				break;
-			case 19:
+			case 14:
 			try {
 				Doctor.getAllPatientsForDoctor(conn);
 			} catch (IOException e) {

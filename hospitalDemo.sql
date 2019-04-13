@@ -275,7 +275,7 @@ CREATE TABLE `ward` (
   `total_capacity` int(11) NOT NULL,
   `current_availability` int(11) NOT NULL,
   `ward_type` int(11) NOT NULL,
-  `nurse_id` int(11) NOT NULL,
+  `nurse_id` int(11),
   PRIMARY KEY (`ward_id`),
   KEY `nurse_id_idx` (`nurse_id`),
   KEY `ward_type_idx` (`ward_type`),
