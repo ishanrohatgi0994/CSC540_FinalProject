@@ -29,7 +29,8 @@ public class Operator {
 				try{
 					Patient.addPatient(conn);
 				} catch(Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while adding patient. Try again");
+					//e.printStackTrace();
 				}
 				break;
 			case 2:
@@ -39,21 +40,21 @@ public class Operator {
 				try {
 					Doctor.updateDoctor(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while updating doctor. Try again");
 				}
 				break;
 			case 5:
 				try {
 					Patient.updatePatient(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while update patient. Try again");
 				}
 				break;
 			case 6:
 				try {
 					Ward.updateWard(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while updating ward");
 				}
 				break;
 			case 7:
@@ -63,42 +64,42 @@ public class Operator {
 				try {
 					Doctor.deleteDoctor(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while deleting doctor");
 				}
 				break;
 			case 10:
 				try {
 					Patient.deletePatient(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while deleting patient");
 				}
 				break;
 			case 11:
 				try {
 					Ward.deleteWard(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while deleting ward");
 				}
 				break;
 			case 12:
 				try {
 					Patient.assignOrUpdateWardToPatient(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while assigning ward");
 				}
 				break;
 			case 13:
 				try {
 					Patient.checkoutPatient(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while checking out patient");
 				}
 				break;
 			case 14:
 				try {
 					Patient.viewPatientsByIDs(conn);
 				} catch (Exception e) {
-					e.printStackTrace();
+					System.out.println("Error while viewing Patient information");
 				}
 				break;
 			case 15:
@@ -108,7 +109,7 @@ public class Operator {
 				try {
 					Patient.viewAndPayBill(conn);
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					System.out.println("Error while generating bill");
 				}
 				break;
 			default:
@@ -223,7 +224,7 @@ public class Operator {
         	System.out.println(UpdateQuery);
             System.out.println("Successfully updated operator record");
 		}catch (Exception e) {
-				System.out.println(e.getMessage());
+				//System.out.println(e.getMessage());
 				System.out.println("Update operator Record unsuccessful");
 		}
 	}
@@ -245,7 +246,7 @@ public class Operator {
 			System.out.println("Delete Operator successful");
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Delete Operator unsuccessful");
 		}
 	}
@@ -261,7 +262,7 @@ public class Operator {
 								"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8)+ "\t Operator");
 			}
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error in viewing operators");
 		}
 	}
@@ -281,7 +282,7 @@ public class Operator {
 								"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8)+ "\t Operator");
 			}
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			System.out.println("Error in viewing operators");
 		}
 	}

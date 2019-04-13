@@ -150,7 +150,7 @@ public class Patient {
                 System.out.println();
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             System.out.println("Error fetching details of patients "+ids);
         }
     }
@@ -256,7 +256,7 @@ public class Patient {
             }
         } catch (SQLException e) {
             System.out.println("Failed to insert patient");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -269,6 +269,17 @@ public class Patient {
          */
         int ID;
         ID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
+
+        // check if the ID is is not soft deleted.
+        int[] ids = new int[1];
+        ids[0] = ID;
+        ArrayList al = getPatientByIDs(conn, ids);
+        if(al.size() == 0) {
+            System.out.println("There are no patients by that ID.");
+            return;
+        }
+
+        // build the update query
         String UpdateQuery = "UPDATE patient SET ";
         String[] attributes = {"name", "address", "ssn", "phone", "age"};
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -292,7 +303,7 @@ public class Patient {
         if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
         	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
         }
-        UpdateQuery = UpdateQuery + "WHERE patient_id="+ID;
+        UpdateQuery = UpdateQuery + " WHERE patient_id="+ID;
         //System.out.println(UpdateQuery);
         //Execute the query
         try {
@@ -439,12 +450,12 @@ public class Patient {
         } catch (SQLException e) {
             conn.rollback();
             System.out.println("Error assigning ward to the patient "+patientID);
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         conn.setAutoCommit(true);
     }
 
-    // get current medical record ID for the patient who is currently enrolled
+    // get current medical record ID fupdor the patient who is currently enrolled
     public static int getCurrentMedicalRecordID(Connection conn, int patientID) throws Exception {
         /*
         Input:
@@ -465,7 +476,7 @@ public class Patient {
             }
         } catch (SQLException e) {
             System.out.println("Error while getting recent medical record for the patient "+ patientID);
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
         return -1;
     }
@@ -524,7 +535,7 @@ public class Patient {
             System.out.println("-----");
         } catch(SQLException e) {
             System.out.println("Error getting medical record summary history ");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -566,7 +577,7 @@ public class Patient {
             System.out.println("Successfully checked out the patient");
         } catch (SQLException e) {
             System.out.println("Error checking out the patient");
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             conn.rollback();
         }
         conn.setAutoCommit(true);
@@ -754,7 +765,7 @@ public class Patient {
         } catch (SQLException e) {
             // Error during execution of the payment
             System.out.println("Error processing payment");
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             // Roll back the transaction.
             conn.rollback();
         }

@@ -79,7 +79,8 @@ public class MedicalRecord {
 				try {
 					conn.rollback();
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					System.out.println("Error in rollback");
+					//e1.printStackTrace();
 				}
 				//System.out.println(e.getMessage());
 				System.out.println("Patient Check-In failed. Please ensure correct patient id is inserted or Try after sometime");
@@ -107,7 +108,6 @@ public class MedicalRecord {
 				}
 				return mr_id;
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
 				System.out.println("Error occured while finding medical record for given Patient ID");
 			}
 			
@@ -175,7 +175,6 @@ public class MedicalRecord {
 				System.out.println("Thankyou !!");
 			}
 			catch(Exception e) {
-				System.out.println(e.getMessage());
 				System.out.println("Update Failed. Please try again with correct Inputs");
 			}
 		}		
@@ -207,7 +206,6 @@ public class MedicalRecord {
 				System.out.println("WARD: "+rs.getInt(5));
 				System.out.println("CHECK IN DATE: "+rs.getDate(6));
 			}catch (Exception e) {
-				System.out.println(e.getMessage());
 				System.out.println("Failed to get latest medical record");
 			}
 		}

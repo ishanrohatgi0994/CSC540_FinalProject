@@ -28,11 +28,11 @@ CREATE TABLE `billing` (
   `payment_type` varchar(45) DEFAULT NULL,
   `total_cost` double NOT NULL,
   `payment_status` int(11) NOT NULL,
-  `credit_card` varchar(19) DEFAULT NULL,
+  `card` varchar(19) DEFAULT NULL,
   PRIMARY KEY (`bill_id`,`mr_id`),
   KEY `mrid_idx` (`mr_id`),
   CONSTRAINT `mrid` FOREIGN KEY (`mr_id`) REFERENCES `medical_records` (`mr_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +41,7 @@ CREATE TABLE `billing` (
 
 LOCK TABLES `billing` WRITE;
 /*!40000 ALTER TABLE `billing` DISABLE KEYS */;
+INSERT INTO `billing` VALUES (11,33,'Credit Card',1000,0,'4044-9876-1234-9123');
 /*!40000 ALTER TABLE `billing` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +64,7 @@ CREATE TABLE `doctor` (
   `status` int(11) NOT NULL,
   PRIMARY KEY (`doc_id`),
   UNIQUE KEY `name` (`name`,`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,6 +73,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` VALUES (11,'Mary',40,'F',6540000000,'Neurology','senior','90 ABC St , Raleigh NC 27',1),(12,'Emma',55,'F',5460000000,'Oncological Surgery','Senior surgeon','49 ABC St , Raleigh NC 27',1),(13,'Peter',52,'M',7240000000,'Oncological Surgery','Anesthetist','475 RG St , Raleigh NC 27',1);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +100,7 @@ CREATE TABLE `medical_records` (
   CONSTRAINT `doc_id` FOREIGN KEY (`doc_id`) REFERENCES `doctor` (`doc_id`),
   CONSTRAINT `patient_id` FOREIGN KEY (`patient_id`) REFERENCES `patient` (`patient_id`),
   CONSTRAINT `ward_id` FOREIGN KEY (`ward_id`) REFERENCES `ward` (`ward_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,6 +109,7 @@ CREATE TABLE `medical_records` (
 
 LOCK TABLES `medical_records` WRITE;
 /*!40000 ALTER TABLE `medical_records` DISABLE KEYS */;
+INSERT INTO `medical_records` VALUES (30,'Hospitalization','nervine','0000-00-00',NULL,1001,21,11),(31,'Hospitalization','nervine','0000-00-00',NULL,1002,22,11),(32,'Hospitalization','nervine','0000-00-00',NULL,1003,21,11),(33,'Surgeon, Hospitalization','analgesic','0000-00-00','0000-00-00',1004,23,12);
 /*!40000 ALTER TABLE `medical_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -129,7 +132,7 @@ CREATE TABLE `nurse` (
   `status` int(11) NOT NULL,
   PRIMARY KEY (`nurse_id`),
   UNIQUE KEY `name` (`name`,`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,6 +141,7 @@ CREATE TABLE `nurse` (
 
 LOCK TABLES `nurse` WRITE;
 /*!40000 ALTER TABLE `nurse` DISABLE KEYS */;
+INSERT INTO `nurse` VALUES (11,'Carol',55,'F',911,'ER',NULL,'351 MH St , Greensboro NC 27',1),(12,'Olivia',27,'F',799,'Neurology',NULL,'325 PD St , Raleigh NC 27',1);
 /*!40000 ALTER TABLE `nurse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +163,7 @@ CREATE TABLE `operator` (
   `address` longtext,
   PRIMARY KEY (`oper_id`),
   UNIQUE KEY `name` (`name`,`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,6 +172,7 @@ CREATE TABLE `operator` (
 
 LOCK TABLES `operator` WRITE;
 /*!40000 ALTER TABLE `operator` DISABLE KEYS */;
+INSERT INTO `operator` VALUES (10,'John',45,'M',5640000000,'Office','Billing staff','798 XYZ St , Rochester NY 54'),(11,'Ava',55,'F',7770000000,'Office','Front Desk Staff','425 RG St , Raleigh NC 27');
 /*!40000 ALTER TABLE `operator` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +194,7 @@ CREATE TABLE `patient` (
   `current_status` int(11) NOT NULL,
   PRIMARY KEY (`patient_id`),
   UNIQUE KEY `name` (`name`,`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,6 +203,7 @@ CREATE TABLE `patient` (
 
 LOCK TABLES `patient` WRITE;
 /*!40000 ALTER TABLE `patient` DISABLE KEYS */;
+INSERT INTO `patient` VALUES (1001,11234,'David',9191233324,39,'M','69 ABC St , Raleigh NC 27730',0),(1002,21234,'Sarah',9195633478,48,'F','81 DEF St , Cary NC 27519',0),(1003,31234,'Joseph',9199572199,32,'M','31 OPG St , Cary NC 27519',0),(1004,41234,'Lucy',9198387123,34,'F','10 TBC St , Raleigh NC 27730',1);
 /*!40000 ALTER TABLE `patient` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +226,7 @@ CREATE TABLE `treatment` (
   CONSTRAINT `docid` FOREIGN KEY (`doc_id`) REFERENCES `doctor` (`doc_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `mr_id` FOREIGN KEY (`mr_id`) REFERENCES `medical_records` (`mr_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `treatment_type` FOREIGN KEY (`treatment_type`) REFERENCES `treatment_cost` (`treatment_type`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,6 +235,7 @@ CREATE TABLE `treatment` (
 
 LOCK TABLES `treatment` WRITE;
 /*!40000 ALTER TABLE `treatment` DISABLE KEYS */;
+INSERT INTO `treatment` VALUES (29,30,11,'Eye Test'),(30,31,13,'Skin test'),(31,32,12,'PT test'),(32,33,13,'Normal Consultation');
 /*!40000 ALTER TABLE `treatment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -252,6 +259,7 @@ CREATE TABLE `treatment_cost` (
 
 LOCK TABLES `treatment_cost` WRITE;
 /*!40000 ALTER TABLE `treatment_cost` DISABLE KEYS */;
+INSERT INTO `treatment_cost` VALUES ('Blood test',8769.26),('Bone Density test',2362.32),('CAT scan',1453.43),('CT scan',3489.8),('Eye test',2478.76),('MRI',5737.87),('Normal Consultation',500),('PT test',984.98),('RBC count test',7453.36),('Skin test',2853.41),('X-ray',530.57);
 /*!40000 ALTER TABLE `treatment_cost` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -273,7 +281,7 @@ CREATE TABLE `ward` (
   KEY `ward_type_idx` (`ward_type`),
   CONSTRAINT `nurse_id` FOREIGN KEY (`nurse_id`) REFERENCES `nurse` (`nurse_id`),
   CONSTRAINT `ward_type` FOREIGN KEY (`ward_type`) REFERENCES `ward_charges` (`ward_type`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -282,6 +290,7 @@ CREATE TABLE `ward` (
 
 LOCK TABLES `ward` WRITE;
 /*!40000 ALTER TABLE `ward` DISABLE KEYS */;
+INSERT INTO `ward` VALUES (21,4,4,4,11),(22,4,4,4,11),(23,2,2,3,12),(24,2,2,2,12);
 /*!40000 ALTER TABLE `ward` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -305,6 +314,7 @@ CREATE TABLE `ward_charges` (
 
 LOCK TABLES `ward_charges` WRITE;
 /*!40000 ALTER TABLE `ward_charges` DISABLE KEYS */;
+INSERT INTO `ward_charges` VALUES (1,50),(2,50),(3,100),(4,100);
 /*!40000 ALTER TABLE `ward_charges` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -317,71 +327,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-10 11:38:36
-# Insert statements:
 
-/* Patients */
-insert into patient (patient_id, ssn, name, phone, age, gender, address, current_status)
-values
-(1001, 000011234, 'David', 9191233324, 39, 'M', '69 ABC St , Raleigh NC 27730', 0),
-(1002, 000021234, 'Sarah', 9195633478, 48, 'F', '81 DEF St , Cary NC 27519', 0),
-(1003, 000031234, 'Joseph', 9199572199, 32, 'M', '31 OPG St , Cary NC 27519', 0),
-(1004, 000041234, 'Lucy', 9198387123, 34, 'F', '10 TBC St , Raleigh NC 27730', 1);
-
-/* treatment_cost */
-INSERT INTO `treatment_cost` VALUES ('Blood test',8769.26),
-('Bone Density test',2362.32),
-('CAT scan',1453.43),
-('CT scan',3489.8),
-('Eye test',2478.76),
-('MRI',5737.87),
-('Normal Consultation',500),
-('PT test',984.98),
-('RBC count test',7453.36),
-('Skin test',2853.41),
-('X-ray',530.57);
-
-# Ward Charges:
-INSERT INTO ward_charges
-(ward_type,charges)
-VALUES
-(1,50),
-(2,50),
-(3,100),
-(4,100);
-
-#1) Doctor:
-INSERT INTO doctor
-(name,age,gender,phone,dept,professional_title,address,status)
-VALUES
-("Mary",40,"F",6540000000,"Neurology","senior","90 ABC St , Raleigh NC 27",1),
-("Emma",55,"F",5460000000,"Oncological Surgery","Senior surgeon","49 ABC St , Raleigh NC 27",1),
-("Peter",52,"M",7240000000,"Oncological Surgery","Anesthetist","475 RG St , Raleigh NC 27",1);
-
-# Operators
-
-INSERT INTO operator
-(name,age,gender,phone,department,job_title,address)
-VALUES
-("John",45,"M",5640000000,"Office","Billing staff","798 XYZ St , Rochester NY 54"),
-("Ava",55,"F",7770000000,"Office","Front Desk Staff","425 RG St , Raleigh NC 27");
-
-insert into nurse(name, age,gender,phone,dept, professional_title,address,status) 
-values ('Carol', 55, 'F', 911, 'ER', null, '351 MH St , Greensboro NC 27', 1),
-('Olivia', 27, 'F', 799, 'Neurology', null, '325 PD St , Raleigh NC 27', 1);
-	
-insert into ward(total_capacity, current_availability, ward_type, nurse_id)
-values (4, 4, 4, 1), (4, 4, 4, 1), (2, 2, 2, 2), (2, 2, 2, 2);
-
-insert into medical_records(diagnosis, prescription, checkin_date, checkout_date, patient_id, ward_id, doc_id)
-values ('Hospitalization', 'nervine', 2019-03-01, null, 1, 1, 1),
-('Hospitalization', 'nervine', 2019-03-10, null, 2, 2, 1),
-('Hospitalization', 'nervine', 2019-03-15, null, 3, 1, 1),
-('Surgeon, Hospitalization', 'analgesic', 2019-03-17, 2019-03-21, 4, 3, 2);
-
-insert into treatment (mr_id, doc_id, treatment_type) values
-(1, 1, "Eye Test"),
-(2, 3, "Skin test"),
-(3, 2, "PT test"),
-(4, 3, "Normal Consultation");
-
+-- Dump completed on 2019-04-12 18:58:25
