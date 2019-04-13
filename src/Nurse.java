@@ -19,11 +19,13 @@ public class Nurse {
 		//Function used to display the actions that can be performed by Nurse
 		System.out.println("\n " +
 				"1) Update Medical Record \n " +
-				"2) Enter Treatment (Test) Details \n " +
+				"2) Add Treatment (Test) Details \n " +
 				"3) View Managed Ward Information \n " +
 				"4) View Treatment Details \n " +
 				"5) View Medical Record for Patient \n" +
-				"6) Delete Treatment Details of a Patient");
+				"6) Delete Treatment Details of a Patient \n" +
+				"7) Update treatment details for a patient \n" +
+				"8) View Medical Record History\n");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1: mr.updateMedicalRecord(conn);
@@ -43,6 +45,15 @@ public class Nurse {
 				break;
 		case 6: treatment.deleteTreatment(conn);
 				break;
+		case 7:
+			treatment.updateTreatment(conn);
+			break;
+		case 8:
+			try {
+				Patient.viewMedicalHistory(conn);
+			} catch (Exception e) {
+				System.out.println("Error while fetching medical history of patient");
+			}
 		default: 
 			System.out.println("Enter valid Input");
 		}

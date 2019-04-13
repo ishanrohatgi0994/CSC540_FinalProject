@@ -90,39 +90,56 @@ public class Ward {
 
 		//Check if Nurse ID exists
 		do{
-			String nurseIDString = Utils.readAttribute("nurse ID", "Ward", false);
-			nurseID = Integer.parseInt(nurseIDString);
+			String nurseIDString = Utils.readAttribute("nurse ID", "Ward", true);
+			if(nurseIDString.length() != 0){
+				nurseID = Integer.parseInt(nurseIDString);
 
-			try{
-				PreparedStatement stmt=conn.prepareStatement("Select * from nurse WHERE nurse_id = " + nurseID);
-				ResultSet rs = stmt.executeQuery();
-				if (rs.next()){
-					System.out.println("Nurse Exists\n");
-				}
-				else{
-					System.out.println("Nurse ID Not Found\n");
-					nurseID = 0;
-				}
+				try{
+					PreparedStatement stmt=conn.prepareStatement("Select * from nurse WHERE nurse_id = " + nurseID);
+					ResultSet rs = stmt.executeQuery();
+					if (rs.next()){
+						System.out.println("Nurse Exists\n");
+					}
+					else{
+						System.out.println("Nurse ID Not Found\n");
+						nurseID = 0;
+					}
 
+				}
+				catch (SQLException e){
+					System.out.println("Nurse Does not exist\n");
+				}
 			}
-			catch (SQLException e){
-				System.out.println("Nurse Does not exist\n");
+			else{
+				nurseID = -1;
 			}
-		}while (nurseID == 0);
+		}while ((nurseID == 0) || (nurseID != -1));
 
 
 
 		// execute the statement
 		try {
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO ward (total_capacity, current_availability, ward_type, nurse_id)"+
-					" VALUES (?, ?, ?, ?)");
+			if (nurseID != -1){
+				PreparedStatement ps = conn.prepareStatement("INSERT INTO ward (total_capacity, current_availability, ward_type, nurse_id)"+
+						" VALUES (?, ?, ?, ?)");
 
-			ps.setInt(1, totalCapacity);
-			ps.setInt(2, totalCapacity);
-			ps.setInt(3, wardType);
-			ps.setInt(4, nurseID);
+				ps.setInt(1, totalCapacity);
+				ps.setInt(2, totalCapacity);
+				ps.setInt(3, wardType);
+				ps.setInt(4, nurseID);
 
-			ps.executeUpdate();
+				ps.executeUpdate();
+			}
+			else{
+				PreparedStatement ps = conn.prepareStatement("INSERT INTO ward (total_capacity, current_availability, ward_type)"+
+						" VALUES (?, ?, ?)");
+
+				ps.setInt(1, totalCapacity);
+				ps.setInt(2, totalCapacity);
+				ps.setInt(3, wardType);
+
+				ps.executeUpdate();
+			}
 
 			// Get the inserted id
 			ResultSet rs = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");

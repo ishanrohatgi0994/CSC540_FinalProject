@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,11 +13,15 @@ public class Admin {
 
 	public void displayAdminOptions(Connection conn) {
 		System.out.println(" \n 1) Add Doctor \n 2) Add Nurse \n 3) Add Operator \n 4) Add Ward"
-				+ "\n 5) Assign Nurse to ward \n 6) Update Operator \n 7)Update Nurse \n" +
+				+ "\n 5)Update Ward \n 6) Update Operator \n 7)Update Nurse \n" +
 				" 8) Update Doctor \n" + " 9) Delete Operator \n " + " 10) Delete Nurse \n" +
-				" 11) Delete Doctor \n" + " 12) View All Operators \n" +
-				" 13) View All Nurses \n" + " 14) View All Doctors \n 15) View Operator By ID" + "\n"
-				+ "16) View All Staff By Role " + "\n");
+				" 11) Delete Doctor \n" + "12) Delete Ward \n" + " 13) View All Operators \n" +
+				" 14) View All Nurses \n" + " 15) View All Doctors \n 16) View Operator By ID" + "\n"
+				+ "17) Add Patient \n 18) Update Patient \n 19) Delete Patient \n 20) View Patient \n"
+				+ "21) View All Staff By Role Report\n 22) Ward Usage Status (percent usage) Report \n 23) view and pay bill \n "
+				+ "24) Get number of patients for date range Report \n"
+				+ "25) Medical History for given time range Report \n " 
+				+ "26) List of patients currently treated by a  given doctor Report \n");
 		int choice = sc.nextInt();
 		switch (choice) {
 			case 1:
@@ -46,6 +51,13 @@ public class Admin {
 				} catch(Exception e) {
 					System.out.println("Error occured while performing operation");
 				}
+				break;
+			case 5:
+			try {
+				Ward.updateWard(conn);
+			} catch (Exception e1) {
+				System.out.println("Error while updating ward");
+			}
 				break;
 			case 6:
 				try {
@@ -82,21 +94,88 @@ public class Admin {
 				}
 				break;
 			case 12:
-				op.viewAllOperators(conn);
+				Ward.deleteWard(conn);
 				break;
 			case 13:
-				nurse.viewAllNurses(conn);
+				op.viewAllOperators(conn);
 				break;
 			case 14:
-				doctor.viewAllDoctors(conn);
+				nurse.viewAllNurses(conn);
 				break;
 			case 15:
+				doctor.viewAllDoctors(conn);
+				break;
+			case 16:
 				op.viewOperator(conn);
 				break;
-			case 16: try {
+			case 17:
+			try {
+				Patient.addPatient(conn);
+			} catch (Exception e1) {
+				System.out.println("Add patient unsuccessful");
+			}
+				break;
+			case 18:
+				try {
+					Patient.updatePatient(conn);
+				} catch (Exception e1) {
+					System.out.println("Update patient unsuccessful");
+				}
+					break;
+			case 19:
+				try {
+					Patient.deletePatient(conn);
+				} catch (Exception e1) {
+					System.out.println("Delete patient unsuccessful");
+				}
+					break;
+			case 20:
+				try {
+					Patient.viewPatientsByIDs(conn);
+				} catch (Exception e1) {
+					System.out.println("View patient unsuccessful");
+				}
+					break;
+						
+			case 21: try {
 				viewAllStaffByRole(conn);
 			} catch (Exception e) {
 				System.out.println("Error while performing operation");
+			}
+				break;
+				
+			case 22:
+				Ward.getCurrentWardUsageStatus(conn);
+				break;
+				
+			case 23:
+				try {
+					Patient.viewAndPayBill(conn);
+				} catch (Exception e) {
+					System.out.println("Error while generating bill");
+				}
+				break;
+				
+			case 24:
+				try {
+					MedicalRecord.getPatientPerMonth(conn);
+				} catch (Exception e) {
+					System.out.println("Error while getting patients");
+				}
+				break;
+				
+			case 25:
+			try {
+				Patient.viewMedicalHistory(conn);
+			} catch (Exception e) {
+				System.out.println("Error while medical history for patients");
+			}
+				break;
+			case 26:
+			try {
+				Doctor.getAllPatientsForDoctor(conn);
+			} catch (IOException e) {
+				System.out.println("Error while getting patients");
 			}
 				break;
 				
