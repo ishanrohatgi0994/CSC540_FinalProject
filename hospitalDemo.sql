@@ -384,3 +384,4 @@ insert into treatment (mr_id, doc_id, treatment_type) values
 (2, 3, "Skin test"),
 (3, 2, "PT test"),
 (4, 3, "Normal Consultation");
+
