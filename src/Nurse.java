@@ -93,6 +93,24 @@ public class Nurse {
 		//Setting the Status of Nurse as 0 indicates that the nurse is no longer staff of hospital.
 		
 		try {
+
+			// check if the nurse with the same name and phone number exists
+			String selectNurseBeforeInsert = "SELECT * from nurse where name='"+name+"' AND phone="+phone;
+			Statement s = conn.createStatement();
+			ResultSet r = s.executeQuery(selectNurseBeforeInsert);
+			if (r.next()) {
+				if (r.getInt("status") == 0) {
+					// if there is an entry with the same name and phone number, update the current status to set to the currently inputted status.
+					String updateNurseStatus = "UPDATE nurse SET status=" + 1 + " WHERE name='" + name + "' AND phone=" + phone;
+					Statement updateNurse = conn.createStatement();
+					updateNurse.executeUpdate(updateNurseStatus);
+					System.out.println("Returning Nurse. Updated the status of the nurse");
+					return;
+				} else {
+					System.out.println("Nurse already exists. Cannot insert nurse");
+					return;
+				}
+			}
 			PreparedStatement stmt=conn.prepareStatement("INSERT INTO Nurse (name,age,gender,phone,dept,professional_title,address,status)"+
 														"VALUES (?,?,?,?,?,?,?,?)");
 			stmt.setString(1, name);
