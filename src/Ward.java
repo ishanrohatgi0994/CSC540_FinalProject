@@ -48,6 +48,24 @@ public class Ward {
 
 	}
 
+	public static void viewWardInformationForDoctor(Connection conn){
+
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT ward_id, ward.nurse_id, nurse.name, nurse.phone FROM ward join nurse on ward.nurse_id=nurse.nurse_id ;");
+			ResultSet rs = stmt.executeQuery();
+
+			System.out.print("Ward ID \t\t Nurse ID \t\t Nurse Name \t\t Nurse Phone\n");
+			while(rs.next()){
+				System.out.println(rs.getInt(1)+"\t\t"+rs.getInt(2)+"\t\t"+rs.getString(3)
+						+"\t\t"+rs.getBigDecimal(4));
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Ward Information could not be recieved");
+		}
+
+	}
+
 	// Add Ward
 	public static void addWard(Connection conn) throws IOException {
 		// initialize required attributes
