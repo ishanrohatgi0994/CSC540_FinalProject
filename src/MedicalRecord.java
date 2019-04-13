@@ -210,4 +210,35 @@ public class MedicalRecord {
 			}
 		}
 	}
+
+
+	/* Get all patients for a given date range returns a count of the number of times a patient entry was created for that date range.
+	* Also it returns a count of the distinct number of patients that entered for the given date range.*/
+	public static void getPatientPerMonth(Connection conn){
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the start date(yyyy-mm-dd)");
+		String sd = sc.next();
+		System.out.println("Enter end date(yyyy-mm-dd)");
+		String ed = sc.next();
+
+		try {
+			PreparedStatement stmt=conn.prepareStatement("SELECT COUNT(patient_id), COUNT(DISTINCT(patient_id)) FROM medical_records where "+
+					"checkin_date >= ? and checkin_date <= ?;");
+			stmt.setString(1, sd);
+			stmt.setString(2, ed);
+			ResultSet rs = stmt.executeQuery();
+			System.out.println("---------------------------------------------------");
+			System.out.println("Patient checkins for the given date range is:");
+			System.out.println("---------------------------------------------------");
+			System.out.println("Total Count \t\t Distinct Count");
+
+			while(rs.next()) {
+				System.out.println(rs.getInt(1) + "\t \t " + rs.getInt(2));
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+			e.printStackTrace();
+			System.out.println("Error occured while fetching number of patients");
+		}
+	}
 }
