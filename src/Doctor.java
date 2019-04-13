@@ -21,7 +21,8 @@ public class Doctor {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
 				+ "\n 3) View Current Treatment Details \n 4) Add Treatment"
 				+ "\n 5) Update Treatment"
-				+ "\n 6) Update Medical Record");
+				+ "\n 6) Update Medical Record"
+				+ "\n 7) Get List of Patients by Doctor");
 		Scanner sc = new Scanner(System.in);
 
 		int choice = sc.nextInt();
@@ -36,6 +37,13 @@ public class Doctor {
 				break;
 			case 5: 
 				treatment.updateTreatment(conn);
+				break;
+			case 7:
+				try {
+					getAllPatientsForDoctor(conn);
+				} catch (IOException e) {
+					System.out.println("Doctor not found");
+				}
 				break;
 			default:
 				System.out.println("Invalid choice");
@@ -86,7 +94,8 @@ public class Doctor {
 			address = null;
 		}
 
-		int current_status = Integer.parseInt(Utils.readAttribute("current status ", "Doctor", false));
+		System.out.println("Enter one of the following for status of Doctor: 0 - Not work in hospital, 1 - Works in hospital.");
+		int current_status = Integer.parseInt(Utils.readAttribute("status ", "Doctor", false));
 		while(current_status != STATUS_NOT_WORKING && current_status != STATUS_WORKING) {
 			System.out.println("Invalid status "+current_status+" entered. Try again.");
 			current_status = Integer.parseInt(Utils.readAttribute("current status ", "Patient", false));
@@ -94,6 +103,26 @@ public class Doctor {
 
 		// execute the statement
 		try {
+
+			// check if the doctor with the same name and phone number exists
+			String selectDoctorBeforeInsert = "SELECT * from doctor where name='"+name+"' AND phone="+phone;
+			Statement s = conn.createStatement();
+			ResultSet r = s.executeQuery(selectDoctorBeforeInsert);
+			if (r.next()) {
+				if (r.getInt("status") == STATUS_NOT_WORKING) {
+					// if there is an entry with the same nanme and phone number, update the current status to set to the currently inputted status.
+					String updateDoctorStatus = "UPDATE doctor SET status=" + 1 + " WHERE name='" + name + "' AND phone=" + phone;
+					Statement updateDoctor = conn.createStatement();
+					updateDoctor.executeUpdate(updateDoctorStatus);
+					System.out.println("Returning doctor. Updated the status of the doctor");
+					return;
+				} else {
+					System.out.println("Doctor already exists. Cannot insert doctor");
+					return;
+				}
+			}
+
+
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO doctor (name, age, gender, phone, dept, professional_title, address, status)"+
 					" VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, name);
@@ -229,5 +258,45 @@ public class Doctor {
 			//System.out.println(e.getMessage());
 			System.out.println("Error in viewing Doctors");
 		}
+	}
+
+	public static void getAllPatientsForDoctor(Connection conn) throws IOException {
+		int ID;
+		int flag = 0;
+
+		ID = Integer.parseInt(Utils.readAttribute("ID", "Doctor", false));
+		try {
+			PreparedStatement stmt1 = conn.prepareStatement("Select status from doctor where doc_id="+ID);
+			ResultSet rs1 = stmt1.executeQuery();
+			while(rs1.next()){
+				flag = rs1.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Doctor Not found");
+		}
+
+		if (flag == STATUS_WORKING){
+			try {
+				PreparedStatement stmt = conn.prepareStatement("Select * from patient where patient_id in (" +
+						"Select patient_id from medical_records" + " where doc_id="+ ID +" and checkout_date is null);");
+
+				ResultSet rs = stmt.executeQuery();
+				System.out.print("SSN \t\t Name \t Phone \t Age \t\t Gender \t\t Address \t\t Current Status \n");
+
+				while(rs.next()) {
+					System.out.println(rs.getBigDecimal(2) + "\t\t" + rs.getString(3) + "\t\t"+rs.getBigDecimal(4) + "\t"+rs.getInt(5) + "\t\t"+rs.getString(6) +
+							"\t\t"+rs.getString(7) +"\t\t"+rs.getInt(8)+"\n");
+				}
+			} catch (SQLException e) {
+				System.out.println(e);
+				e.printStackTrace();
+				System.out.println("Could not find patient records for this doctor");
+			}
+		}
+		else{
+			System.out.println("Doctor not found");
+		}
+
+
 	}
 }

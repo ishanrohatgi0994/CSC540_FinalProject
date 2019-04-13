@@ -269,6 +269,17 @@ public class Patient {
          */
         int ID;
         ID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
+
+        // check if the ID is is not soft deleted.
+        int[] ids = new int[1];
+        ids[0] = ID;
+        ArrayList al = getPatientByIDs(conn, ids);
+        if(al.size() == 0) {
+            System.out.println("There are no patients by that ID.");
+            return;
+        }
+
+        // build the update query
         String UpdateQuery = "UPDATE patient SET ";
         String[] attributes = {"name", "address", "ssn", "phone", "age"};
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -292,7 +303,7 @@ public class Patient {
         if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
         	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
         }
-        UpdateQuery = UpdateQuery + "WHERE patient_id="+ID;
+        UpdateQuery = UpdateQuery + " WHERE patient_id="+ID;
         //System.out.println(UpdateQuery);
         //Execute the query
         try {
@@ -444,7 +455,7 @@ public class Patient {
         conn.setAutoCommit(true);
     }
 
-    // get current medical record ID for the patient who is currently enrolled
+    // get current medical record ID fupdor the patient who is currently enrolled
     public static int getCurrentMedicalRecordID(Connection conn, int patientID) throws Exception {
         /*
         Input:
