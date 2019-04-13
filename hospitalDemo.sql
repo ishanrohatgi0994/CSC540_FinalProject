@@ -73,7 +73,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
-INSERT INTO `doctor` VALUES (11,'Mary',40,'F',6540000000,'Neurology','senior','90 ABC St , Raleigh NC 27',1),(12,'Emma',55,'F',5460000000,'Oncological Surgery','Senior surgeon','49 ABC St , Raleigh NC 27',1),(13,'Peter',52,'M',7240000000,'Oncological Surgery','Anesthetist','475 RG St , Raleigh NC 27',1);
+INSERT INTO `doctor` VALUES (11,'Mary',40,'F',654,'Neurology','senior','90 ABC St , Raleigh NC 27',1),(12,'Emma',55,'F',546,'Oncological Surgery','Senior surgeon','49 ABC St , Raleigh NC 27',1),(13,'Peter',52,'M',724,'Oncological Surgery','Anesthetist','475 RG St , Raleigh NC 27',1);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,7 +172,7 @@ CREATE TABLE `operator` (
 
 LOCK TABLES `operator` WRITE;
 /*!40000 ALTER TABLE `operator` DISABLE KEYS */;
-INSERT INTO `operator` VALUES (10,'John',45,'M',5640000000,'Office','Billing staff','798 XYZ St , Rochester NY 54'),(11,'Ava',55,'F',7770000000,'Office','Front Desk Staff','425 RG St , Raleigh NC 27');
+INSERT INTO `operator` VALUES (10,'John',45,'M',564,'Office','Billing staff','798 XYZ St , Rochester NY 54'),(11,'Ava',55,'F',777,'Office','Front Desk Staff','425 RG St , Raleigh NC 27');
 /*!40000 ALTER TABLE `operator` ENABLE KEYS */;
 UNLOCK TABLES;
 
