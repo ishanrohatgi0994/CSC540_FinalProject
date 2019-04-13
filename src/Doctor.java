@@ -19,11 +19,11 @@ public class Doctor {
 	MedicalRecord mr = new MedicalRecord();
 	public void displayDoctorOptions(Connection conn) {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
-				+ "\n 3) View Current Treatment Details \n 4) Add Treatment"
-				+ "\n 5) Update Treatment"
-				+ "\n 6) Delete Treatment"
-				+ "\n 7) Update Medical Record"
-				+ "\n 8) Get List of Patients by Doctor"
+				+ "\n 3) View Current Treatment Details for Patient \n 4) Add Treatment for Patient"
+				+ "\n 5) Update Treatment for Patient"
+				+ "\n 6) Delete Treatment for Patient"
+				+ "\n 7) Update Medical Record for Patient"
+				+ "\n 8) Get List of Patients treated by Doctor"
 				+ "\n 9) View Current Medical Record for a patient"
 				);
 		Scanner sc = new Scanner(System.in);

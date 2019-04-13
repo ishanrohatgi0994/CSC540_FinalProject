@@ -19,9 +19,9 @@ public class Operator {
 				+ "\n 1) Add Patient"
 				+ "\n 2) Add Medical Record(Check -In) for a Patient"
 				+ "\n 3) Update Patient "
-				+ "\n 4) Update Ward \n 5) Update Medical Record"
+				+ "\n 4) Update Ward \n 5) Update Medical Record for Patient"
 				+ "\n 6) Delete Patient"
-				+ "\n 7) Assign/Update Patient to Ward \n 8) Checkout Patient \n 9) View Patient\n"
+				+ "\n 7) Assign/Update Patient to Ward \n 8) Checkout Patient \n 9) View Patients\n"
 				+" 10) Ward Usage Status (percent usage) Report \n 11) view and pay bill \n 12) Get number of patients for date range Report\n"
 				+ "13) Medical History for given time range Report \n "
 				+ "14) List of patients currently treated by a  given doctor Report");
