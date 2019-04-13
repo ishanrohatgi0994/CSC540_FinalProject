@@ -18,14 +18,14 @@ public class Nurse {
 	public void displayNurseOptions(Connection conn) {
 		//Function used to display the actions that can be performed by Nurse
 		System.out.println("\n " +
-				"1) Update Medical Record \n " +
-				"2) Add Treatment (Test) Details \n " +
-				"3) View Managed Ward Information \n " +
-				"4) View Treatment Details \n " +
+				"1) Update Medical Record for Patient \n " +
+				"2) Add Treatment (Test) Details for Patient \n " +
+				"3) View Managed Ward Information for Nurse\n " +
+				"4) View Current Treatment Details for Patient\n " +
 				"5) View Medical Record for Patient \n" +
 				"6) Delete Treatment Details of a Patient \n" +
 				"7) Update treatment details for a patient \n" +
-				"8) View Medical Record History\n");
+				"8) View Medical Record History for Patient\n");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1: mr.updateMedicalRecord(conn);

@@ -120,7 +120,7 @@ public class Treatment {
 	//Update Treatment for a given patient
 	public void updateTreatment(Connection conn){
 		//Function to update Treatment details associated with the Patient.
-		System.out.println("Enter Patient ID who's treatment details has to be deleted");
+		System.out.println("Enter Patient ID who's treatment details has to be updated");
 		int patientId = sc.nextInt();
 		int medicalRecordId = -1;
 		boolean flag = true;
@@ -178,11 +178,11 @@ public class Treatment {
 			else {
 				
 				do {
-					System.out.println("Do you want to update Doctor ID(Y/N) ?");
+					System.out.println("Do you want to update specialised Doctor ID(Y/N) ?");
 					ch = sc.next();
 					if(ch.equals("Y") || ch.equals("y")) {
 						sc.nextLine();
-						System.out.println("Enter Doctor ID");
+						System.out.println("Enter specialised Doctor ID");
 						int newDrID = sc.nextInt();
 						rs.updateInt("doc_id", newDrID);
 					}
