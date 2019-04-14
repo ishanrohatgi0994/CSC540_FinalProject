@@ -165,6 +165,7 @@ public class Patient {
 
         If the patient was soft-deleted, just change the current status of the patient to the one the user inputs.
         else create a new patient entry
+        returns the ID of the previously existing patient or new the ID of the new patient record.
          */
 
         // initialize required attributes
@@ -182,7 +183,12 @@ public class Patient {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(s);
         if(rs.next()) {
-        	if(rs.getInt("current_status") == Patient.)
+            if (rs.getInt("current_status") == Patient.STATUS_SOFT_DELETED) {
+                // Update the status to STATUS_OUTPATIENT
+                String updatePatient = "UPDATE patient SET current_status="+STATUS_OUTPATIENT+" WHERE patient_id = "+STATUS_OUTPATIENT;
+                stmt.executeUpdate(updatePatient);
+            }
+            // Return the present patient ID
         	return rs.getInt("patient_id");
         }
         // read other attributes
@@ -213,24 +219,7 @@ public class Patient {
 
         // execute the statement
         try {
-            // check if the patient with the same name and phone number exists
-            String selectPatientBeforeInsert = "SELECT * from patient where name='"+name+"' AND phone="+phone;
-            Statement s = conn.createStatement();
-            ResultSet r = s.executeQuery(selectPatientBeforeInsert);
-            if (r.next()) {
-                 if (r.getInt("current_status") == STATUS_SOFT_DELETED) {
-                     // if there is an entry with the same nanme and phone number, update the current status to set to the currently inputted status.
-                     String updatePatientStatus = "UPDATE patient SET current_status=" + current_status + " WHERE name='" + name + "' AND phone=" + phone;
-                     Statement updatePatient = conn.createStatement();
-                     updatePatient.executeUpdate(updatePatientStatus);
-                     System.out.println("Returning patient. Updated the status of the patient");
-                     return;
-                 } else {
-                     System.out.println("Patient already exists. Cannot insert patient");
-                     return;
-                 }
-            }
-            // if no records which were soft deleted are present, insert a new record.
+            // Insert the patient
             PreparedStatement ps = conn.prepareStatement("INSERT INTO patient (name, address, ssn, phone, current_status, age, gender)"+
                     " VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, name);
@@ -241,7 +230,7 @@ public class Patient {
                 ps.setBigDecimal(3, null);
             }
             ps.setBigDecimal(4, new BigDecimal(phone));
-            ps.setInt(5, current_status);
+            ps.setInt(5, STATUS_OUTPATIENT);
             if(age != null) {
                 ps.setInt(6, age);
             } else {
@@ -251,9 +240,10 @@ public class Patient {
             ps.executeUpdate();
 
             // Get the inserted id
-            ResultSet rs = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");
-            if(rs.next()) {
-                System.out.println("Successfully inserted patient record with ID " + rs.getInt(1));
+            ResultSet rs1 = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");
+            if(rs1.next()) {
+                System.out.println("Successfully inserted patient record with ID " + rs1.getInt(1));
+                return rs1.getInt(1);
             } else {
                 System.out.println("Successfully inserted patient record. Bud ID could not be retrieved.");
             }
@@ -261,6 +251,7 @@ public class Patient {
             System.out.println("Failed to insert patient");
             //e.printStackTrace();
         }
+        return -1;
     }
 
     // update a patient by interactively getting the ID of the patient.

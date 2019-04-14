@@ -26,7 +26,14 @@ public class MedicalRecord {
 	 */
 	
 	public void checkInPatient(Connection conn) {
-		int p_id = Patient.addPatientIfNotExists(conn);
+
+		int p_id;
+		try{
+			p_id = Patient.addPatientIfNotExists(conn);
+		} catch (Exception e) {
+			System.out.println("Error encountered while adding patient record");
+			return;
+		}
 		int ward_id = -1;
 		System.out.println("Ward Required ? (Y/N)");
 		String ch = sc.next();
@@ -37,7 +44,7 @@ public class MedicalRecord {
 			ward_id = Ward.getWardAvailaibilityByWardType(choice, conn);
 			if(ward_id == -1) {
 				System.out.println("Ward Not Available. Cannot Check-In");
-				Patient.changeStatus(p_id); // change status of patient back to 0 - out of hospital
+				// Patient.changeStatus(p_id); // change status of patient back to 0 - out of hospital
 				flag = false;
 			}
 		}

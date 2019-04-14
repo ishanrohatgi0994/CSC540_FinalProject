@@ -113,11 +113,11 @@ public class Admin {
 				op.viewOperator(conn);
 				break;
 			case 17:
-			try {
-				Patient.addPatient(conn);
-			} catch (Exception e1) {
-				System.out.println("Add patient unsuccessful");
-			}
+//			try {
+//				Patient.addPatient(conn);
+//			} catch (Exception e1) {
+//				System.out.println("Add patient unsuccessful");
+//			}
 				break;
 			case 18:
 				try {
