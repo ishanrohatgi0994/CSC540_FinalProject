@@ -9,6 +9,9 @@ import java.sql.*;
 
 
 public class Ward {
+
+	/*View ward information that is assigned to a particular nurse. If the nurse ID is not found the
+	* system iteratively asks for nurse id till it finds a valid match.*/
 	public static void viewWardInformationForNurse(Connection conn) throws IOException {
 		// TODO Auto-generated method stub
 		int nurseID;
@@ -48,6 +51,9 @@ public class Ward {
 
 	}
 
+	/*This function is used to siplay ward information to a doctor. A doctor may need to know the current ward
+	* availability, the corresponding nurse id who manages the ward. Hence we do a join on the ward table field nurse_id
+	* and nurse table field nurse_id to display ward information and nurse information for each ward in the database. */
 	public static void viewWardInformationForDoctor(Connection conn){
 
 		try {
@@ -66,7 +72,11 @@ public class Ward {
 
 	}
 
-	// Add Ward
+	/* Add Ward information by iteratively asking for each field. If the ward type entered is invalid then system
+	* iteratively asks till valid bed type is not entered. Initially on adding a ward, the current availability of
+	* ward is set to the same number as total capacity as it;s a new ward being added and currently has no patients
+	* in it.*/
+
 	public static void addWard(Connection conn) throws IOException {
 		// initialize required attributes
 		Integer totalCapacity, wardType, nurseID;
@@ -88,7 +98,7 @@ public class Ward {
 			}
 		}while (wardType == 0);
 
-		//Check if Nurse ID exists
+		//Check if Nurse ID exists. If blank set nurseID to -1 which we will check for later and assign NULL in DB.
 		do{
 			String nurseIDString = Utils.readAttribute("nurse ID", "Ward", true);
 			if(nurseIDString.length() != 0){
@@ -154,7 +164,8 @@ public class Ward {
 
 	}
 
-	// update a ward by interactively getting the ID of the ward.
+	/* Update a ward by interactively getting the ID of the ward. While updating a ward the total availability cannot
+	* be set to a number which is less than the current availability of the ward. */
 	public static void updateWard(Connection conn) throws Exception{
 		int ID;
 		ID = Integer.parseInt(Utils.readAttribute("ID", "Ward", false));
@@ -167,6 +178,7 @@ public class Ward {
 			System.out.println("Should "+ attribute+" be updated? (y/n)");
 			if (br.readLine().equals("y")) {
 
+				//Ensure new total availability is not less than current availability
 				if (attribute.equals("total_capacity")) {
 
 					try{
@@ -193,6 +205,7 @@ public class Ward {
 					}
 				}
 
+				//Ensure ward bed-type added is correct
 				else if (attribute.equals("ward_type")) {
 					int wardType = 0;
 					String val = "";
@@ -211,6 +224,7 @@ public class Ward {
 					UpdateQuery = UpdateQuery + attribute + "=" + val + ", ";
 				}
 
+				// Ensure nurseID being updated is present in the database
 				else if (attribute.equals("nurse_id")) {
 					int nurseID = 0;
 					String val = "";
@@ -253,6 +267,7 @@ public class Ward {
 		}
 	}
 
+	/*It is used to permanently delete the ward from the database. */
 	public static void deleteWard(Connection conn)throws Exception{
 		int ID;
 		ID = Integer.parseInt(Utils.readAttribute("ID", "Ward", false));

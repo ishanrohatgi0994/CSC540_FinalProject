@@ -12,11 +12,15 @@ public class Doctor {
     name, phone, status
      */
 
+	/* Status fields do denote if doctor currently working in hospital or not.
+	* When doctor gets deleted, instead of hard delete, we implement soft delete and change status to not working.*/
 	public static int STATUS_NOT_WORKING = 0;
 	public static int STATUS_WORKING = 1;
 
 	Treatment treatment = new Treatment();
 	MedicalRecord mr = new MedicalRecord();
+
+	/* Display menu options for Doctor */
 	public void displayDoctorOptions(Connection conn) {
 		System.out.println("\n 1) View Patient's Medical History(for given data range) \n 2) View Ward Information "
 				+ "\n 3) View Current Treatment Details for Patient \n 4) Add Treatment for Patient"
@@ -70,13 +74,12 @@ public class Doctor {
 				System.out.println("Invalid choice");
 			}
 		}
-	// Check which functionalities to implement in this class in Project Report 3
-	// Custom Implementation: View Ward Info will be showing the ward information and nurse name and contact details
 
 
 
-	//Ishan Implementation
-	// Add Doctor
+	/* Add Doctor record. If doctor record already exists and status is not working
+	* then update status to working. If doctor record already exists and status is working
+	* then reject addition and display message already exists.*/
 	public static void addDoctor(Connection conn) throws IOException {
 		// initialize required attributes
 		String name, address, professional_title, dept, gender;
@@ -143,7 +146,7 @@ public class Doctor {
 				}
 			}
 
-
+			// Prepare the SQL query to execute
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO doctor (name, age, gender, phone, dept, professional_title, address, status)"+
 					" VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, name);
@@ -178,7 +181,7 @@ public class Doctor {
 
 	}
 
-	// update a doctor by interactively getting the ID of the doctor.
+	// Update a doctor interactively by getting the ID of the doctor.
 	public static void updateDoctor(Connection conn) throws Exception{
 		int ID;
 		ID = Integer.parseInt(Utils.readAttribute("ID", "Doctor", false));
@@ -241,7 +244,7 @@ public class Doctor {
 		}
 	}
 
-	// View all Doctors
+	// View all information for all Doctors
 	public void viewAllDoctors(Connection conn) {
 		try {
 			PreparedStatement stmt=conn.prepareStatement("Select * from doctor");
@@ -257,7 +260,7 @@ public class Doctor {
 		}
 	}
 
-	//Get Doctor By List of ID's
+	//Get Doctor information By List of ID's
 	public void viewDoctorsByIds(Connection conn, int[] doctorIDs) {
 
 		try {
@@ -281,6 +284,9 @@ public class Doctor {
 		}
 	}
 
+
+	/*Select and display all the patient information that a doctor is currently treating.
+	* Hence we look for patient checkout date as null and get information for current patients*/
 	public static void getAllPatientsForDoctor(Connection conn) throws IOException {
 		int ID;
 		int flag = 0;

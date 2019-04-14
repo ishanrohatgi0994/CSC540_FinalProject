@@ -188,8 +188,11 @@ public class Admin {
 			
 		}
 	}
+
 	// Only view. Include all operations that Operator can do. Implementing Operations will be part of operator class
-	
+
+	/*Function to view the information of all staff members currently employed by the
+	 hospital database grouped by their role.*/
 	public void viewAllStaffByRole(Connection conn) throws Exception{
 		//View all Staff information grouped by their Role
 		String query = "select * from (select name, age, gender, phone, dept, professional_title, address,status, 'Nurse' as Role from nurse where nurse.status <> 0 \r\n" + 
