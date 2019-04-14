@@ -77,37 +77,11 @@ Additional APIs
 
 Pending Tasks
 ---
-### Encapsulate program in do-while logic for continuous execution until user wants to exit. test entire program.
-
-### Document execution of all the functions in the code
+### Update patients status attribute back to zero if medical record is not created based on ward preference.
 
 ### High level design desicion in document.
 
 ### Display appropriate tasks for appropriate type of users.
 
-## Aniruddh
-1. Change get ward logic
-2. Update 2nd transaction in document based on 1
-3. Add 3rd transaction in the document. (cardAuthorization)
-4. Make use of view doctor by IDs in view medical history.
-5. Patient and treatment data dump
-6. Check if patient is already present before adding
-7. billing table schema change.
-8. change paybill api to accoomodate new billing schema
-
-## Harsh
-1. Ward charges data dump
-2. Code comments.
-3. Current Ward usage percentage report.
-
-## Chinmai
-1. check if nurse is present before inserting
-
 ## Ishan
-1. Get all staff by role
-2. Get all doctors by role
-3. write documentation in code
-4. Billing data dump
-5. check if doctor is present before inserting
-6. All information of patients currently being treated by a given doctor (Ishan)
-7. Number patients per month.
+3. write documentation in code,report
