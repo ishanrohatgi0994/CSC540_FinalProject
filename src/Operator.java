@@ -30,7 +30,7 @@ public class Operator {
 		switch (choice){
 			case 1:
 				try{
-					Patient.addPatient(conn);
+					Patient.addPatientIfNotExists(conn);
 				} catch(Exception e) {
 					System.out.println("Error while adding patient. Try again");
 					//e.printStackTrace();
@@ -224,6 +224,7 @@ public class Operator {
         
         try {
         	Statement stmt = conn.createStatement();
+        	stmt.executeUpdate(UpdateQuery);
         	System.out.println(UpdateQuery);
             System.out.println("Successfully updated operator record");
 		}catch (Exception e) {
