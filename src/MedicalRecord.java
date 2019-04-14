@@ -37,6 +37,7 @@ public class MedicalRecord {
 			ward_id = Ward.getWardAvailaibilityByWardType(choice, conn);
 			if(ward_id == -1) {
 				System.out.println("Ward Not Available. Cannot Check-In");
+				Patient.changeStatus(p_id); // change status of patient back to 0 - out of hospital
 				flag = false;
 			}
 		}
