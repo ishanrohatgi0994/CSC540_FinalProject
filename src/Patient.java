@@ -321,10 +321,15 @@ public class Patient {
         Input:
             Connection to the database
         Soft deletes the patient only by updating the patient record to have the status; 3 i.e SOFT_DELETED.
+        Cannot delete a patient who has a pending checkout.
          */
         int ID;
         ID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
         System.out.println("Are you sure you want to delete the patient with id "+ ID+"? (y/n)");
+        if(Patient.getCurrentMedicalRecordID(conn, ID) != -1){
+            System.out.println("Cannot checkout a patient who has a pending checkout.");
+            return;
+        }
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         if(br.readLine().equals("y")) {
             Statement stmt = conn.createStatement();
