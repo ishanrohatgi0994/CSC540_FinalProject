@@ -661,7 +661,7 @@ public class Patient {
         double wardChargesPerDay = 0;
         if(rs.next()){
             wardChargesPerDay = rs.getDouble(1);
-            System.out.println("inside if: "+ wardChargesPerDay);
+//            System.out.println("inside if: "+ wardChargesPerDay);
         }
 
         // Total cost is the cost of the treatments, ward costs and registration charges.
