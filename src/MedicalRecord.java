@@ -190,15 +190,20 @@ public class MedicalRecord {
 			try {
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
-
-				System.out.println("MEDICAL RECORD ID: " + rs.getInt(1));
-				System.out.println("RESPONSIBLE DOCTOR: " + rs.getInt(2));
-				System.out.println("PRESCRIPTION GIVEN: "+rs.getString(3));
-				System.out.println("DIAGNOSIS: "+rs.getString(4));
-				System.out.println("WARD: "+rs.getInt(5));
-				System.out.println("CHECK IN DATE: "+rs.getDate(6));
+				if(!rs.next()) {
+					System.out.println("No medical record found for the given patient");
+				}
+				else {
+					System.out.println("MEDICAL RECORD ID: " + rs.getInt(1));
+					System.out.println("RESPONSIBLE DOCTOR: " + rs.getInt(2));
+					System.out.println("PRESCRIPTION GIVEN: "+rs.getString(3));
+					System.out.println("DIAGNOSIS: "+rs.getString(4));
+					System.out.println("WARD: "+rs.getInt(5));
+					System.out.println("CHECK IN DATE: "+rs.getDate(6));
+				}
 			}catch (Exception e) {
 				System.out.println("Failed to get latest medical record");
+//				System.out.println(e.getMessage());
 			}
 		}
 	}
