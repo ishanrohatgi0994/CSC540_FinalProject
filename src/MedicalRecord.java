@@ -33,7 +33,7 @@ public class MedicalRecord {
 		p_id = Patient.addPatientIfNotExists(conn);
 		if(p_id < 0) {
 			conn.rollback();
-			System.out.println("Error encountered while adding patient record");
+			System.out.println("Error creating a record for the patient or the patient has already checked-in");
 			return;
 		}
 		int ward_id = -1;

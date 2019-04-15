@@ -187,6 +187,9 @@ public class Patient {
                 // Update the status to STATUS_OUTPATIENT
                 String updatePatient = "UPDATE patient SET current_status="+STATUS_OUTPATIENT+" WHERE patient_id = "+STATUS_OUTPATIENT;
                 stmt.executeUpdate(updatePatient);
+            } else if (rs.getInt("current_status") == Patient.STATUS_ADMITTED || rs.getInt("current_status")== Patient.STATUS_OUTPATIENT){
+                // Patient is already in the hospital. Hence avoid checking in once again
+                return -1;
             }
             // Return the present patient ID
         	return rs.getInt("patient_id");
