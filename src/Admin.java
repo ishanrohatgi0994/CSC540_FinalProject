@@ -10,6 +10,7 @@ public class Admin {
 	Operator op = new Operator();
 	Nurse nurse = new Nurse();
 	Doctor doctor = new Doctor();
+	MedicalRecord mr = new MedicalRecord();
 
 	public void displayAdminOptions(Connection conn) {
 		System.out.println(" \n 1) Add Doctor \n 2) Add Nurse \n 3) Add Operator \n 4) Add Ward"
@@ -113,11 +114,11 @@ public class Admin {
 				op.viewOperator(conn);
 				break;
 			case 17:
-//			try {
-//				Patient.addPatient(conn);
-//			} catch (Exception e1) {
-//				System.out.println("Add patient unsuccessful");
-//			}
+			try {
+				mr.checkInPatient(conn);
+			} catch (Exception e1) {
+				System.out.println("Add patient unsuccessful");
+			}
 				break;
 			case 18:
 				try {

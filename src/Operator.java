@@ -16,7 +16,6 @@ public class Operator {
 	
 	public void displayOperatorOptions(Connection conn) {
 		System.out.println("\n"
-				+ "\n 1) Add Patient"
 				+ "\n 2) Add Medical Record(Check -In) for a Patient"
 				+ "\n 3) Update Patient "
 				+ "\n 4) Update Ward \n 5) Update Medical Record for Patient"
@@ -28,16 +27,12 @@ public class Operator {
 			// Check out patient involves generating Billing too
 		int choice = sc.nextInt();
 		switch (choice){
-			case 1:
-				try{
-					Patient.addPatientIfNotExists(conn);
-				} catch(Exception e) {
-					System.out.println("Error while adding patient. Try again");
-					//e.printStackTrace();
-				}
-				break;
 			case 2:
+			try {
 				mr.checkInPatient(conn);
+			} catch (Exception e1) {
+				System.out.println("Error in checking in patient");
+			}
 				break;
 			case 3:
 				try {
