@@ -105,7 +105,7 @@ public class Ward {
 				nurseID = Integer.parseInt(nurseIDString);
 
 				try{
-					PreparedStatement stmt=conn.prepareStatement("Select * from nurse WHERE nurse_id = " + nurseID);
+					PreparedStatement stmt=conn.prepareStatement("Select * from nurse WHERE nurse_id = " + nurseID +" and status = 1;");
 					ResultSet rs = stmt.executeQuery();
 					if (rs.next()){
 						System.out.println("Nurse Exists\n");
@@ -123,7 +123,7 @@ public class Ward {
 			else{
 				nurseID = -1;
 			}
-		}while ((nurseID == 0) || (nurseID != -1));
+		}while (nurseID == 0);
 
 
 
@@ -197,7 +197,7 @@ public class Ward {
 							}
 						}while(newTotal < currentAvailability);
 
-						UpdateQuery = UpdateQuery + attribute + "=" + val + ", ";
+						UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
 
 					}
 					catch (SQLException e){
@@ -221,7 +221,7 @@ public class Ward {
 							wardType = 0;
 						}
 					}while (wardType == 0);
-					UpdateQuery = UpdateQuery + attribute + "=" + val + ", ";
+					UpdateQuery = UpdateQuery + attribute + "=" + val + ",";
 				}
 
 				// Ensure nurseID being updated is present in the database
@@ -233,7 +233,7 @@ public class Ward {
 						nurseID = Integer.parseInt(val);
 
 						try{
-							PreparedStatement stmt=conn.prepareStatement("Select * from nurse WHERE nurse_id = " + nurseID);
+							PreparedStatement stmt=conn.prepareStatement("Select * from nurse WHERE nurse_id = " + nurseID + " and status = 1");
 							ResultSet rs = stmt.executeQuery();
 							if (rs.next()){
 								System.out.println("Nurse Exists\n");
@@ -253,9 +253,13 @@ public class Ward {
 				}
 			}
 		}
-		UpdateQuery = UpdateQuery + "WHERE ward_id ="+ID;
-		System.out.println(UpdateQuery);
+		if (UpdateQuery != null && UpdateQuery.length() > 0 && UpdateQuery.charAt(UpdateQuery.length() - 1) == ',') {
+        	UpdateQuery = UpdateQuery.substring(0, UpdateQuery.length() - 1);
+        }
+		UpdateQuery = UpdateQuery + " WHERE ward_id ="+ID;
+//		System.out.println(UpdateQuery);
 
+		
 		//Execute the query
 		try {
 			Statement stmt = conn.createStatement();
