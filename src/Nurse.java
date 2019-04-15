@@ -138,7 +138,15 @@ public class Nurse {
 			stmt.setInt(8, status);
 			stmt.executeUpdate(); // Insertion done
 			System.out.println();
-			System.out.println("Nurse Insertion Successful");
+
+			// select last insert ID
+			// Get the inserted id
+			ResultSet rs1 = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");
+			if(rs1.next()) {
+				System.out.println("Successfully inserted nurse record with ID " + rs1.getInt(1));
+			} else {
+				System.out.println("Successfully inserted nurse record. Bud ID could not be retrieved.");
+			}
 		}
 		catch(Exception e) {
 //			System.out.println(e.getMessage());

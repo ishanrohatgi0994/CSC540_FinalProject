@@ -173,7 +173,14 @@ public class Operator {
 			stmt.setString(7, address);
 			stmt.executeUpdate(); // Insertion done
 			System.out.println();
-			System.out.println("Operator Insertion Successful");
+
+            // Get the inserted id
+            ResultSet rs1 = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");
+            if(rs1.next()) {
+                System.out.println("Successfully inserted operator record with ID " + rs1.getInt(1));
+            } else {
+                System.out.println("Successfully inserted patient record. Bud ID could not be retrieved.");
+            }
 		}
 		catch(Exception e) {
 			System.out.println("Operator Creation Failed");
