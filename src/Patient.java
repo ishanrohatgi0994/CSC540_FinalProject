@@ -404,12 +404,14 @@ public class Patient {
                     if(!ip.equals("y")){
 
                         System.out.println("Did not update ward info for the patient"+ ip);
+                        conn.setAutoCommit(true);
                         return;
                     }
                     Patient.releaseBed(conn, medicalRecordID);
                 }
             } else {
                 System.out.println("Medical record not found or patient deleted!");
+                conn.setAutoCommit(true);
                 return;
             }
             // check if at least 1 bed is available in the ward
@@ -422,6 +424,7 @@ public class Patient {
             }
             if(currentAvailability <= 0) {
                 System.out.println("No beds available in the ward "+wardID);
+                conn.setAutoCommit(true);
                 return;
             }
 
@@ -711,6 +714,7 @@ public class Patient {
             // if no pending bills, return
             if(!printed) {
                 System.out.println("No pending bills available");
+                conn.setAutoCommit(true);
                 return;
             }
             //Get the bill which is to be paid now
@@ -735,6 +739,7 @@ public class Patient {
                     break;
                 default:
                     System.out.println("Invalid payment type");
+                    conn.setAutoCommit(true);
                     return;
             }
             // update query to update the billing information
@@ -751,6 +756,7 @@ public class Patient {
                 } else {
                     System.out.println("Invalid card information. Payment failed");
                     conn.rollback();
+                    conn.setAutoCommit(true);
                     return;
                 }
             }
