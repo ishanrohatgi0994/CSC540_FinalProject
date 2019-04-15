@@ -225,7 +225,7 @@ public class MedicalRecord {
 			stmt.setString(2, sd);
 			ResultSet rs = stmt.executeQuery();
 			System.out.println("---------------------------------------------------");
-			System.out.println("Patient checkins for the given date range is:");
+			System.out.println("Number of Patients for the given date range is:");
 			System.out.println("---------------------------------------------------");
 			System.out.println("Total Count \t\t Distinct Count");
 
