@@ -326,12 +326,12 @@ public class Patient {
         int ID;
         ID = Integer.parseInt(Utils.readAttribute("ID", "Patient", false));
         System.out.println("Are you sure you want to delete the patient with id "+ ID+"? (y/n)");
-        if(Patient.getCurrentMedicalRecordID(conn, ID) != -1){
-            System.out.println("Cannot checkout a patient who has a pending checkout.");
-            return;
-        }
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         if(br.readLine().equals("y")) {
+            if(Patient.getCurrentMedicalRecordID(conn, ID) != -1){
+                System.out.println("Cannot checkout a patient who has a pending checkout.");
+                return;
+            }
             Statement stmt = conn.createStatement();
             String UpdateQuery = "UPDATE patient SET current_status = "+Patient.STATUS_SOFT_DELETED+" where patient_id = "+ID;
             try {
