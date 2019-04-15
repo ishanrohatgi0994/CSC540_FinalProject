@@ -122,7 +122,7 @@ public class Nurse {
 					return;
 				}
 			}
-			PreparedStatement stmt=conn.prepareStatement("INSERT INTO Nurse (name,age,gender,phone,dept,professional_title,address,status)"+
+			PreparedStatement stmt=conn.prepareStatement("INSERT INTO nurse (name,age,gender,phone,dept,professional_title,address,status)"+
 														"VALUES (?,?,?,?,?,?,?,?)");
 			stmt.setString(1, name);
 			if(age != null) {
@@ -141,6 +141,7 @@ public class Nurse {
 			System.out.println("Nurse Insertion Successful");
 		}
 		catch(Exception e) {
+//			System.out.println(e.getMessage());
 			System.out.println("Nurse Creation Failed");
 		}
 	}
@@ -219,7 +220,7 @@ public class Nurse {
 	//View all nurses
 	public void viewAllNurses(Connection conn) {
 		try {
-			PreparedStatement stmt=conn.prepareStatement("Select * from Nurse");
+			PreparedStatement stmt=conn.prepareStatement("Select * from nurse");
 			ResultSet rs = stmt.executeQuery();
 			
 			if (!rs.next()) {
