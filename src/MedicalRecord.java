@@ -56,7 +56,7 @@ public class MedicalRecord {
 		String pattern = "yyyy-MM-dd";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String date = simpleDateFormat.format(new Date());
-		//conn.setAutoCommit(false); // Transaction
+		
 			if(ward_id != -1) {
 				PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id,ward_id)"+
 									"VALUES (?,?,?)");
@@ -64,6 +64,9 @@ public class MedicalRecord {
 				stmt.setInt(2, p_id);
 				stmt.setInt(3, ward_id);
 				stmt.executeUpdate(); // Insertion done
+				PreparedStatement stmt2=conn.prepareStatement("Update patient set current_status = 2 where patient_id = ?");
+				stmt2.setInt(1, p_id);
+				stmt2.executeUpdate();
 			}
 			else {
 				PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id)"+
