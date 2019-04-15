@@ -264,7 +264,7 @@ public class Treatment {
 		catch (Exception e){
 			System.out.println("Unable to fetch treatment details for given patient id");
 		}
-		}
+		
 		//Perform deletion of the treatment details.
 		System.out.println("Enter the Treatment ID which has to be deleted from the above list");
 		int treatmentId = sc.nextInt();
@@ -276,6 +276,7 @@ public class Treatment {
 		}catch (Exception e) {
 			//System.out.println(e.getMessage());
 			System.out.println("Error in deletion of treatment details");
+		}
 		}
 	}
 }
