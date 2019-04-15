@@ -6,7 +6,14 @@ public class Utils {
     // function for interactively reading an attribute from the console
     public static String readAttribute(String attrName, String entityName, boolean CanBeEmpty) {
     	try {
-	        String displayString = "Enter " + attrName + " of the "+ entityName+". ";
+    		String displayString;
+    		if(attrName.toLowerCase().equals("gender")) {
+    			displayString = "Enter " + attrName + " (m/f/o)"+ " of the "+ entityName+". ";
+    		}
+    		else {
+    			displayString = "Enter " + attrName + " of the "+ entityName+". ";
+    		}
+//	        String displayString = "Enter " + attrName + " of the "+ entityName+". ";
 	        if(CanBeEmpty) {
 	            displayString = displayString + " Leave blank if empty";
 	        }

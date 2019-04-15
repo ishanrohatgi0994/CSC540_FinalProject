@@ -18,7 +18,7 @@ public class Admin {
 				" 8) Update Doctor \n" + " 9) Delete Operator \n " + " 10) Delete Nurse \n" +
 				" 11) Delete Doctor \n" + "12) Delete Ward \n" + " 13) View All Operators \n" +
 				" 14) View All Nurses \n" + " 15) View All Doctors \n 16) View Operator By ID" + "\n"
-				+ "17) Add Patient \n 18) Update Patient \n 19) Delete Patient \n 20) View Patient \n"
+				+ "17) Check-In Patient \n 18) Update Patient \n 19) Delete Patient \n 20) View Patient \n"
 				+ "21) View All Staff By Role Report\n 22) Ward Usage Status (percent usage) Report \n 23) view and pay bill \n "
 				+ "24) Get number of patients for date range Report \n"
 				+ "25) Medical History for given time range Report \n " 
@@ -117,7 +117,7 @@ public class Admin {
 			try {
 				mr.checkInPatient(conn);
 			} catch (Exception e1) {
-				System.out.println("Add patient unsuccessful");
+				System.out.println("Checked-in patient unsuccessful");
 			}
 				break;
 			case 18:

@@ -16,7 +16,7 @@ public class Operator {
 	
 	public void displayOperatorOptions(Connection conn) {
 		System.out.println("\n"
-				+ "\n 2) Add Medical Record(Check -In) for a Patient"
+				+ "\n 2) Check -In Patient"
 				+ "\n 3) Update Patient "
 				+ "\n 4) Update Ward \n 5) Update Medical Record for Patient"
 				+ "\n 6) Delete Patient"
