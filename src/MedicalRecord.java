@@ -123,7 +123,7 @@ public class MedicalRecord {
 			System.out.println("Patient not checked-In yet");
 		}
 		else {
-			System.out.println(mr_id);
+			//System.out.println(mr_id);
 			try {
 				PreparedStatement stmt=conn.prepareStatement("Select * from medical_records where mr_id = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				stmt.setInt(1, mr_id);
@@ -140,7 +140,7 @@ public class MedicalRecord {
 						System.out.println("Enter new prescription details");
 						sc.nextLine();
 						String new_prescription = sc.nextLine();
-						rs.updateString("prescription", old_prescription+ "\n" + new_prescription);
+						rs.updateString("prescription", old_prescription+ ", " + new_prescription);
 						System.out.println("Update Prescription successful");
 					}
 					

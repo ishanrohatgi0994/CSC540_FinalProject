@@ -16,7 +16,7 @@ public class Treatment {
 		//If the Patient is not undergoing any treatment then we display appropriate message.
 		System.out.println("Enter Patient ID");
 		int patientId = sc.nextInt();
-		System.out.println("Enter Doctor ID");
+		System.out.println("Enter Specialist Doctor ID");
 		int doctorId = sc.nextInt();
 		System.out.println("Enter the treatment type number");
 		int medicalRecordId=-1, treatmentNumber;
