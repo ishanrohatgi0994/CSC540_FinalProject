@@ -762,7 +762,7 @@ public class Patient {
                 }
             }
             updateBilling = updateBilling + " WHERE bill_id="+billingID;
-            System.out.println(updateBilling);
+            // System.out.println(updateBilling);
             Statement s = conn.createStatement();
             s.executeUpdate(updateBilling);
             conn.commit();

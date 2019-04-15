@@ -109,7 +109,7 @@ CREATE TABLE `medical_records` (
 
 LOCK TABLES `medical_records` WRITE;
 /*!40000 ALTER TABLE `medical_records` DISABLE KEYS */;
-INSERT INTO `medical_records` VALUES (30,'Hospitalization','nervine','0000-00-00',NULL,1001,21,11),(31,'Hospitalization','nervine','0000-00-00',NULL,1002,22,11),(32,'Hospitalization','nervine','0000-00-00',NULL,1003,21,11),(33,'Surgeon, Hospitalization','analgesic','0000-00-00','0000-00-00',1004,23,12);
+INSERT INTO `medical_records` VALUES (30,'Hospitalization','nervine','2019-03-01',NULL,1001,21,11),(31,'Hospitalization','nervine','2019-03-10',NULL,1002,22,11),(32,'Hospitalization','nervine','2019-03-15',NULL,1003,21,11),(33,'Surgeon, Hospitalization','analgesic','2019-03-17','2019-03-21',1004,23,12);
 /*!40000 ALTER TABLE `medical_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
