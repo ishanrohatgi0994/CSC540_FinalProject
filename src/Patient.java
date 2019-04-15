@@ -771,6 +771,7 @@ public class Patient {
             Statement s = conn.createStatement();
             s.executeUpdate(updateBilling);
             conn.commit();
+            System.out.println("Successfully paid the bill");
         } catch (SQLException e) {
             // Error during execution of the payment
             System.out.println("Error processing payment");
