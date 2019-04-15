@@ -75,7 +75,7 @@ public class MedicalRecord {
 			System.out.println("Patient "+ p_id + " successfully checked into wolfware hospital");
 			if(ward_id != -1) {
 				Ward.decrementWardCapacity(ward_id, conn);
-				System.out.println("Decremented corresponding ward capacity");
+				//System.out.println("Decremented corresponding ward capacity");
 			}
 			conn.commit(); // Committing the transaction
 		}catch(SQLException e) {
