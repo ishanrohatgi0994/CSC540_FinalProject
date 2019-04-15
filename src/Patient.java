@@ -504,7 +504,7 @@ public class Patient {
         try {
             Statement stmt = conn.createStatement();
             String query = "SELECT mr_id, doc_id, prescription, diagnosis, ward_id, checkin_date, checkout_date FROM medical_records WHERE "+
-                    "checkin_date >= '"+startDate+"' AND checkout_date <= '"+endDate+"' AND patient_id = "+patientID;
+                    "checkin_date <= '"+endDate+"' AND checkout_date >= '"+startDate+"' AND patient_id = "+patientID;
             ResultSet rs = stmt.executeQuery(query);
             System.out.println("Summary history");
             System.out.println("-----");

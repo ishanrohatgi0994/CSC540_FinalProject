@@ -220,9 +220,9 @@ public class MedicalRecord {
 
 		try {
 			PreparedStatement stmt=conn.prepareStatement("SELECT COUNT(patient_id), COUNT(DISTINCT(patient_id)) FROM medical_records where "+
-					"checkin_date >= ? and checkin_date <= ?;");
-			stmt.setString(1, sd);
-			stmt.setString(2, ed);
+					"checkin_date <= ? and checkout_date >= ?;");
+			stmt.setString(1, ed);
+			stmt.setString(2, sd);
 			ResultSet rs = stmt.executeQuery();
 			System.out.println("---------------------------------------------------");
 			System.out.println("Patient checkins for the given date range is:");
