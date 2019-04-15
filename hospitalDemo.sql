@@ -109,7 +109,7 @@ CREATE TABLE `medical_records` (
 
 LOCK TABLES `medical_records` WRITE;
 /*!40000 ALTER TABLE `medical_records` DISABLE KEYS */;
-INSERT INTO `medical_records` VALUES (30,'Hospitalization','nervine','0000-00-00',NULL,1001,21,11),(31,'Hospitalization','nervine','0000-00-00',NULL,1002,22,11),(32,'Hospitalization','nervine','0000-00-00',NULL,1003,21,11),(33,'Surgeon, Hospitalization','analgesic','0000-00-00','0000-00-00',1004,23,12);
+INSERT INTO `medical_records` VALUES (30,'Hospitalization','nervine','2019-03-01',NULL,1001,21,11),(31,'Hospitalization','nervine','2019-03-10',NULL,1002,22,11),(32,'Hospitalization','nervine','2019-03-15',NULL,1003,21,11),(33,'Surgeon, Hospitalization','analgesic','2019-03-17','2019-03-21',1004,23,12);
 /*!40000 ALTER TABLE `medical_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,7 +203,7 @@ CREATE TABLE `patient` (
 
 LOCK TABLES `patient` WRITE;
 /*!40000 ALTER TABLE `patient` DISABLE KEYS */;
-INSERT INTO `patient` VALUES (1001,11234,'David',9191233324,39,'M','69 ABC St , Raleigh NC 27730',0),(1002,21234,'Sarah',9195633478,48,'F','81 DEF St , Cary NC 27519',0),(1003,31234,'Joseph',9199572199,32,'M','31 OPG St , Cary NC 27519',0),(1004,41234,'Lucy',9198387123,34,'F','10 TBC St , Raleigh NC 27730',1);
+INSERT INTO `patient` VALUES (1001,11234,'David',9191233324,39,'M','69 ABC St , Raleigh NC 27730',2),(1002,21234,'Sarah',9195633478,48,'F','81 DEF St , Cary NC 27519',2),(1003,31234,'Joseph',9199572199,32,'M','31 OPG St , Cary NC 27519',2),(1004,41234,'Lucy',9198387123,34,'F','10 TBC St , Raleigh NC 27730',0);
 /*!40000 ALTER TABLE `patient` ENABLE KEYS */;
 UNLOCK TABLES;
 
