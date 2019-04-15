@@ -25,12 +25,14 @@ public class MedicalRecord {
 
 	 */
 	
-	public void checkInPatient(Connection conn) {
+	public void checkInPatient(Connection conn) throws Exception {
 
 		int p_id;
-		try{
-			p_id = Patient.addPatientIfNotExists(conn);
-		} catch (Exception e) {
+		try {
+		conn.setAutoCommit(false); // Transaction start
+		p_id = Patient.addPatientIfNotExists(conn);
+		if(p_id < 0) {
+			conn.rollback();
 			System.out.println("Error encountered while adding patient record");
 			return;
 		}
@@ -44,61 +46,41 @@ public class MedicalRecord {
 			ward_id = Ward.getWardAvailaibilityByWardType(choice, conn);
 			if(ward_id == -1) {
 				System.out.println("Ward Not Available. Cannot Check-In");
-				// Patient.changeStatus(p_id); // change status of patient back to 0 - out of hospital
+				conn.rollback();
 				flag = false;
+				return;
 			}
 		}
-		if(flag) {
-			String pattern = "yyyy-MM-dd";
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date = simpleDateFormat.format(new Date());
-			//System.out.println(date);
-			try {
-				conn.setAutoCommit(false); // Transaction
-				if(ward_id != -1) {
-					PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id,ward_id)"+
-										"VALUES (?,?,?)");
-					stmt.setString(1, date);
-					stmt.setInt(2, p_id);
-					stmt.setInt(3, ward_id);
-					stmt.executeUpdate(); // Insertion done
-				}
-				else {
-					PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id)"+
-							"VALUES (?,?)");
-					stmt.setString(1, date);
-					stmt.setInt(2, p_id);
-					stmt.executeUpdate(); // Insertion done
-				}
-				System.out.println("Patient "+ p_id + " successfully checked into wolfware hospital");
-				try {
-					if(ward_id != -1) {
-						Ward.decrementWardCapacity(ward_id, conn);
-						System.out.println("Decremented corresponding ward capacity");
-					}
-					conn.commit(); // Committing the transaction
-					
-				}catch (Exception e) {
-					conn.rollback();
-					System.out.println("Ward Capacity DecrementOperation Failed");
-				}
-			}catch(Exception e) {
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					System.out.println("Error in rollback");
-					//e1.printStackTrace();
-				}
-				//System.out.println(e.getMessage());
-				System.out.println("Patient Check-In failed. Please ensure correct patient id is inserted or Try after sometime");
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String date = simpleDateFormat.format(new Date());
+		//conn.setAutoCommit(false); // Transaction
+			if(ward_id != -1) {
+				PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id,ward_id)"+
+									"VALUES (?,?,?)");
+				stmt.setString(1, date);
+				stmt.setInt(2, p_id);
+				stmt.setInt(3, ward_id);
+				stmt.executeUpdate(); // Insertion done
 			}
-			try {
-				conn.commit();// No exceptions. Committing the transaction
-				conn.setAutoCommit(true);
-			}catch(Exception e) {
-				System.out.println("SQL Transaction commit Exception");
+			else {
+				PreparedStatement stmt=conn.prepareStatement("INSERT INTO medical_records (checkin_date,patient_id)"+
+						"VALUES (?,?)");
+				stmt.setString(1, date);
+				stmt.setInt(2, p_id);
+				stmt.executeUpdate(); // Insertion done
 			}
+			System.out.println("Patient "+ p_id + " successfully checked into wolfware hospital");
+			if(ward_id != -1) {
+				Ward.decrementWardCapacity(ward_id, conn);
+				System.out.println("Decremented corresponding ward capacity");
+			}
+			conn.commit(); // Committing the transaction
+		}catch(SQLException e) {
+			conn.rollback();
+			System.out.println("Failed to add patient and check-in");
 		}
+		conn.setAutoCommit(true);
 	}
 
 	/* getLatestMedicalRecordFromPatientId() is a Utility API function, which returns the current medical record for patient given his/her patient ID. 
