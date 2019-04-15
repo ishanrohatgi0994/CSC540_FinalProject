@@ -661,7 +661,7 @@ public class Patient {
         double wardChargesPerDay = 0;
         if(rs.next()){
             wardChargesPerDay = rs.getDouble(1);
-            System.out.println("inside if: "+ wardChargesPerDay);
+//            System.out.println("inside if: "+ wardChargesPerDay);
         }
 
         // Total cost is the cost of the treatments, ward costs and registration charges.
@@ -771,6 +771,7 @@ public class Patient {
             Statement s = conn.createStatement();
             s.executeUpdate(updateBilling);
             conn.commit();
+            System.out.println("Successfully paid the bill");
         } catch (SQLException e) {
             // Error during execution of the payment
             System.out.println("Error processing payment");
