@@ -203,14 +203,15 @@ public class Admin {
 				
 		PreparedStatement stmt = conn.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
+		System.out.println("name \t\t\t age \t\t gender \t phone \t\t department \t\t professional_title \t\t address \t\t status \t\t Role");
 		while(rs.next()) {
 			if(rs.getInt(8) == 0){ //Checking if the status attribute is null, this case is for operator who does not have a status column          
 				System.out.println(rs.getString(1) + "\t\t\t" + rs.getInt(2) + "\t\t"+rs.getString(3) + "\t"+rs.getBigDecimal(4) + "\t\t"+rs.getString(5) +
-						"\t\t"+rs.getString(6) + "\t\t"+rs.getString(7) + "\t\t"+ " N/A" + " \t\t Doctor");
+						"\t\t"+rs.getString(6) + "\t\t"+rs.getString(7) + "\t\t"+ " N/A" + " \t\t " + rs.getString(9));
 			}
 			else {
 				System.out.println(rs.getString(1) + "\t\t\t" + rs.getInt(2) + "\t\t"+rs.getString(3) + "\t"+rs.getBigDecimal(4) + "\t\t"+rs.getString(5) +
-				"\t\t"+rs.getString(6) + "\t\t"+rs.getString(7) + "\t\t"+rs.getInt(8) + " \t\t Doctor");
+				"\t\t"+rs.getString(6) + "\t\t"+rs.getString(7) + "\t\t"+rs.getInt(8) + " \t\t " + rs.getString(9));
 			}
 		}
 	}

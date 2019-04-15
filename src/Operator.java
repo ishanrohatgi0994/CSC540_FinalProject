@@ -220,7 +220,7 @@ public class Operator {
         try {
         	Statement stmt = conn.createStatement();
         	stmt.executeUpdate(UpdateQuery);
-        	System.out.println(UpdateQuery);
+//        	System.out.println(UpdateQuery);
             System.out.println("Successfully updated operator record");
 		}catch (Exception e) {
 				//System.out.println(e.getMessage());
