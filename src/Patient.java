@@ -183,10 +183,11 @@ public class Patient {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(s);
         if(rs.next()) {
-            if (rs.getInt("current_status") == Patient.STATUS_SOFT_DELETED) {
+            if (rs.getInt("current_status") == Patient.STATUS_SOFT_DELETED || rs.getInt("current_status") == Patient.STATUS_NOT_IN_HOSPITAL) {
                 // Update the status to STATUS_OUTPATIENT
-                String updatePatient = "UPDATE patient SET current_status="+STATUS_OUTPATIENT+" WHERE patient_id = "+STATUS_OUTPATIENT;
-                stmt.executeUpdate(updatePatient);
+                Statement stmt2 = conn.createStatement();
+                String updatePatient = "UPDATE patient SET current_status="+STATUS_OUTPATIENT+" WHERE patient_id = "+rs.getInt("patient_id");
+                stmt2.executeUpdate(updatePatient);
             } else if (rs.getInt("current_status") == Patient.STATUS_ADMITTED || rs.getInt("current_status")== Patient.STATUS_OUTPATIENT){
                 // Patient is already in the hospital. Hence avoid checking in once again
                 return -1;

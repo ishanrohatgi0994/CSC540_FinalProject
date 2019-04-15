@@ -377,7 +377,7 @@ public class Ward {
 	 */
 	public static void decrementWardCapacity(int ward_id, Connection conn){
 		try {
-			PreparedStatement stmt=conn.prepareStatement("Select ward_id, current_availability from WARD where ward_id = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			PreparedStatement stmt=conn.prepareStatement("Select ward_id, current_availability from ward where ward_id = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			stmt.setInt(1, ward_id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
@@ -388,6 +388,7 @@ public class Ward {
 				//conn.commit();
 			}
 		}catch(Exception e) {
+			System.out.println(e.getMessage());
 			System.out.println("Error Occured while updating ward capacity");
 		}
 	}	

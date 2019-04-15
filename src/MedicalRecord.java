@@ -34,6 +34,7 @@ public class MedicalRecord {
 		if(p_id < 0) {
 			conn.rollback();
 			System.out.println("Error creating a record for the patient or the patient has already checked-in");
+			conn.setAutoCommit(true);
 			return;
 		}
 		int ward_id = -1;
@@ -48,6 +49,7 @@ public class MedicalRecord {
 				System.out.println("Ward Not Available. Cannot Check-In");
 				conn.rollback();
 				flag = false;
+                conn.setAutoCommit(true);
 				return;
 			}
 		}
@@ -78,6 +80,7 @@ public class MedicalRecord {
 			conn.commit(); // Committing the transaction
 		}catch(SQLException e) {
 			conn.rollback();
+			System.out.println(e.getMessage());
 			System.out.println("Failed to add patient and check-in");
 		}
 		conn.setAutoCommit(true);
