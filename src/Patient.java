@@ -96,6 +96,7 @@ public class Patient {
                 p.ssn = null;
             }
             p.gender = rs.getString("gender");
+            p.current_status = rs.getInt("current_status");
             pl.add(p);
         }
         return pl;
@@ -136,10 +137,10 @@ public class Patient {
                         System.out.println("Current Status: OUT OF HOSPITAL");
                         break;
                     case 1:
-                        System.out.println("Current Status: ADMITTED");
+                        System.out.println("Current Status: OUTPATIENT");
                         break;
                     case 2:
-                        System.out.println("Current Status: OUTPATIENT");
+                        System.out.println("Current Status: Admitted");
                     case 3:
                         //do nothing
                         break;
