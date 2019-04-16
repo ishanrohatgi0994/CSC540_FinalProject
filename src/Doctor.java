@@ -273,7 +273,7 @@ public class Doctor {
 
 			PreparedStatement stmt=conn.prepareStatement("Select * from doctor WHERE doc_id IN" + stringDoctorIDs);
 			ResultSet rs = stmt.executeQuery();
-			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t Professional Title \t\t Address \t\t Status \t\t Rolt-Type\n");
+			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t Professional Title \t\t Address \t\t Status \t\t Role-Type\n");
 			while(rs.next()) {
 				System.out.println(rs.getString(2) + "\t\t" + rs.getInt(3) + "\t\t"+rs.getString(4) + "\t"+rs.getBigDecimal(5) + "\t\t"+rs.getString(6) +
 						"\t\t"+rs.getString(7) + "\t\t"+rs.getString(8) + "\t\t"+rs.getInt(9) + " \t\t Doctor");
