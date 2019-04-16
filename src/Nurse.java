@@ -161,7 +161,7 @@ public class Nurse {
 		//and Nurse's phone number are unique.
 		//Nurse's ID also can be used to identify unique Nurse.
 		String name = Utils.readAttribute("name", "Nurse", false);
-		System.out.println("Enter the phone number");
+//		System.out.println("Enter the phone number");
 		BigInteger phone = new BigInteger(Utils.readAttribute("phone number", "Nurse", false));
 		
         String UpdateQuery = "UPDATE nurse SET ";
@@ -206,10 +206,9 @@ public class Nurse {
 		//Get Phone Number and Name of the Nurse whose details has to be updated as the combination of Nurse's name
 		//and Nurse's phone number are unique.
 		//Nurse's ID also can be used to identify unique Nurse.
-		System.out.println("Enter Nurse name who needs to be deleted");
-		String name = sc.nextLine();
-		System.out.println("Enter the phone number");
-		BigInteger phone = sc.nextBigInteger();
+		String name = Utils.readAttribute("name", "Nurse", false);
+//		System.out.println("Enter the phone number");
+		BigInteger phone = new BigInteger(Utils.readAttribute("phone number", "Nurse", false));
 		
 		try {
 			PreparedStatement stmt=conn.prepareStatement("update nurse set status = ? where name =? and phone =?");
