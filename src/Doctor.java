@@ -247,7 +247,7 @@ public class Doctor {
 	// View all information for all Doctors
 	public void viewAllDoctors(Connection conn) {
 		try {
-			PreparedStatement stmt=conn.prepareStatement("Select * from doctor");
+			PreparedStatement stmt=conn.prepareStatement("Select * from doctor where status =1");
 			ResultSet rs = stmt.executeQuery();
 			System.out.print("Name \t\t Age \t Gender \t Phone \t\t Departmet \t\t Professional Title \t\t Address \t\t Status \t\t Role-Type\n ");
 			while(rs.next()) {

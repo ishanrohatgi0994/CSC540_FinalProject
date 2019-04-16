@@ -295,7 +295,7 @@ public class Ward {
 	 */
 	public static void getCurrentWardUsageStatus(Connection conn) {
 		try {
-			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, total_capacity, current_availability FROM Ward");
+			PreparedStatement stmt=conn.prepareStatement("SELECT ward_id, total_capacity, current_availability FROM ward");
 			ResultSet rs = stmt.executeQuery(); 
 			System.out.println("---------------------------------------------------");
 			System.out.println("Current Ward usage status:");

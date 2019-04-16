@@ -228,7 +228,7 @@ public class Nurse {
 	//View all nurses
 	public void viewAllNurses(Connection conn) {
 		try {
-			PreparedStatement stmt=conn.prepareStatement("Select * from nurse");
+			PreparedStatement stmt=conn.prepareStatement("Select * from nurse where status = 1");
 			ResultSet rs = stmt.executeQuery();
 			
 			if (!rs.next()) {
